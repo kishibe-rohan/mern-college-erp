@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 const keys = require("../config/key");
 const sendEmail = require("../utils/nodemailer");
 
-const Student = require("../models/student");
-const Subject = require("../models/subject");
-const Attendance = require("../models/attendance");
-const Message = require("../models/message");
-const Mark = require("../models/marks");
+const Student = require("../models/Student");
+const Subject = require("../models/Subject");
+const Attendance = require("../models/Attendance");
+const Message = require("../models/Message");
+const Mark = require("../models/Marks");
 
 const validateStudentLoginInput = require("../validation/studentLogin");
 
@@ -185,5 +185,134 @@ exports.forgotPassword = async (req, res, next) => {
     }, 3000);
   } catch (err) {
     console.log("Error in sending email", err.message);
+  }
+};
+
+exports.postOTP = async (req, res, next) => {
+  try {
+    const { errors, isValid } = validateOTP(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const { email, otp, newPassword, confirmNewPassword } = req.body;
+    if (newPassword !== confirmNewPassword) {
+      errors.confirmNewPassword = "Password Mismatch";
+      return res.status(400).json(errors);
+    }
+    const student = await Student.findOne({ email });
+    if (student.otp !== otp) {
+      errors.otp = "Invalid OTP, check your email again";
+      return res.status(400).json(errors);
+    }
+
+    let hashedPassword;
+    hashedPassword = await bcrypt.hash(newPassword, 10);
+    student.password = hashedPassword;
+    await student.save();
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (err) {
+    console.log("Error in submitting OTP", err.message);
+    return res.status(400).json({ message: "Error in submitting OTP" });
+  }
+};
+
+exports.postPrivateChat = async (req, res, next) => {
+  try {
+    const {
+      senderName,
+      senderId,
+      roomId,
+      receiverRegistrationNumber,
+      senderRegistrationNumber,
+      message,
+    } = req.body;
+
+    const receiverStudent = await Student.findOne({
+      registrationNumber: receiverRegistrationNumber,
+    });
+
+    const newMessage = await new Message({
+      senderName,
+      senderId,
+      roomId,
+      message,
+      senderRegistrationNumber,
+      receiverRegistrationNumber,
+      receiverName: receiverStudent.name,
+      receiverId: receiverStudent._id,
+      createdAt: new Date(),
+    });
+
+    await newMessage.save();
+  } catch (err) {
+    console.log("Error is sending private chat", err.message);
+  }
+};
+
+exports.getPrivateChat = async (req, res, next) => {
+  try {
+    const { roomId } = req.params;
+    const swap = (input, a, b) => {
+      let temp = input[a];
+      input[a] = input[b];
+      input[b] = temp;
+    };
+
+    const allMessage = await Message.find({ roomId });
+    let tempArr = roomId.split(".");
+    swap(tempArr, 0, 1);
+    let secondRoomId = tempArr[0] + "." + tempArr[1];
+    const allMessage2 = await Message.find({ roomId: secondRoomId });
+
+    var conversation = allMessage.concat(allMessage2);
+    conversation.sort();
+    res.status(200).json({ result: conversation });
+  } catch (err) {
+    console.log("Error in get private chat server side", err.message);
+  }
+};
+
+exports.getAllSubjects = async (req, res, next) => {
+  try {
+    const { department, year } = req.user;
+    const subjects = await Subject.find({ department, year });
+
+    if (subjects.length === 0) {
+      return res.status(404).json({ message: "No subjects found" });
+    }
+    res.status(200).json({ result: subjects });
+  } catch (err) {
+    return res.status(400).json({ "Error in fetching subjects": err.message });
+  }
+};
+
+exports.getAllMarks = async (req, res, next) => {
+  try {
+    const { department, year, id } = req.user;
+    const getMarks = await Mark.find({ department, student: id }).populate(
+      "subject"
+    );
+
+    const UnitTest1 = getMarks.filter((obj) => {
+      return obj.exam === "UnitTest1";
+    });
+
+    const UnitTest2 = getMarks.filter((obj) => {
+      return obj.exam === "UnitTest2";
+    });
+
+    const Semester = getMarks.filter((obj) => {
+      return obj.exam === "Semester";
+    });
+
+    res.status(200).json({
+      result: {
+        UnitTest1,
+        UnitTest2,
+        Semester,
+      },
+    });
+  } catch (err) {
+    return res.status(400).json({ "Error in getting marks": err.message });
   }
 };
