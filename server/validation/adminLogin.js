@@ -1,7 +1,7 @@
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
 
-const validareAdminLoginInput = (data) => {
+const validateAdminLoginInput = (data) => {
   let errors = {};
   data.registrationNumber = !isEmpty(data.registrationNumber)
     ? data.registrationNumber
@@ -26,4 +26,4 @@ const validareAdminLoginInput = (data) => {
   };
 };
 
-module.exports = validareAdminLoginInput;
+module.exports = validateAdminLoginInput;

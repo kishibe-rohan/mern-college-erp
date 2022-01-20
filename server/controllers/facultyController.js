@@ -201,15 +201,83 @@ exports.uploadMarks = async (req, res, next) => {
   }
 };
 
-exports.getAllSubjects = async(req,res,next) => {
-    try{
-        const allSubjects = await Subject.find({});
-        if (!allSubjects) {
-            return res.status(404).json({ message: "You havent registered any subject yet." })
-        }
-        res.status(200).json({ allSubjects })
-    }catch(err)
-    {
-        res.status(400).json({ message: `Error in getting all Subjects", ${err.message}` })
+exports.getAllSubjects = async (req, res, next) => {
+  try {
+    const allSubjects = await Subject.find({});
+    if (!allSubjects) {
+      return res
+        .status(404)
+        .json({ message: "You havent registered any subject yet." });
     }
-}
+    res.status(200).json({ allSubjects });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ message: `Error in getting all Subjects", ${err.message}` });
+  }
+};
+
+exports.updatePassword = async (req, res, next) => {
+  try {
+    const { errors, isValid } = validateFacultyUpdatePassword(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const { registrationNumber, oldPassword, newPassword, confirmNewPassword } =
+      req.body;
+    if (newPassword !== confirmNewPassword) {
+      errors.confirmNewPassword = "Password Mismatch";
+      return res.status(404).json(errors);
+    }
+    const faculty = await Faculty.findOne({ registrationNumber });
+    const isCorrect = await bcrypt.compare(oldPassword, faculty.password);
+    if (!isCorrect) {
+      errors.oldPassword = "Invalid old Password";
+      return res.status(404).json(errors);
+    }
+    let hashedPassword;
+    hashedPassword = await bcrypt.hash(newPassword, 10);
+    faculty.password = hashedPassword;
+    await faculty.save();
+    res.status(200).json({ message: "Password Updated" });
+  } catch (err) {
+    console.log("Error in updating password", err.message);
+  }
+};
+
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const { errors, isValid } = validateForgotPassword(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const { email } = req.body;
+    const faculty = await Faculty.findOne({ email });
+    if (!faculty) {
+      errors.email = "Email Not found, Provide registered email";
+      return res.status(400).json(errors);
+    }
+    function generateOTP() {
+      var digits = "0123456789";
+      let OTP = "";
+      for (let i = 0; i < 6; i++) {
+        OTP += digits[Math.floor(Math.random() * 10)];
+      }
+      return OTP;
+    }
+    const OTP = generateOTP();
+    faculty.otp = OTP;
+    await faculty.save();
+    await sendEmail(faculty.email, OTP, "OTP");
+    res.status(200).json({ message: "Check your registered Email for OTP" });
+    const helper = async () => {
+      faculty.otp = "";
+      await faculty.save();
+    };
+    setTimeout(function () {
+      helper();
+    }, 300000);
+  } catch (err) {
+    console.log("Error in sending OTP email", err.message);
+  }
+};
