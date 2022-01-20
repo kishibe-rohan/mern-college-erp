@@ -316,3 +316,36 @@ exports.getAllMarks = async (req, res, next) => {
     return res.status(400).json({ "Error in getting marks": err.message });
   }
 };
+
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const { email, studentMobileNumber, fatherName, fatherMobileNumber } =
+      req.body;
+
+    const userImg = await bufferConversion(
+      req.file.originalName,
+      req.file.buffer
+    );
+    const imgResponse = await cloudinary.v2.uploader.upload(userImg);
+    const student = await Student.findOne({ email });
+
+    if (studentMobileNumber) {
+      student.studentMobileNumber = studentMobileNumber;
+      await student.save();
+    }
+    if (fatherName) {
+      student.fatherName = fatherName;
+      await student.save();
+    }
+    if (fatherMobileNumber) {
+      student.fatherMobileNumber = fatherMobileNumber;
+      await student.save();
+    }
+
+    student.avatar = imgResponse.secure_url;
+    await student.save();
+    res.status(200).json(student);
+  } catch (err) {
+    console.log("Error in updating Profile", err.message);
+  }
+};

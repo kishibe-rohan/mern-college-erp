@@ -281,3 +281,57 @@ exports.forgotPassword = async (req, res, next) => {
     console.log("Error in sending OTP email", err.message);
   }
 };
+
+exports.postOTP = async (req, res, next) => {
+  try {
+    const { errors, isValid } = validateOTP(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    const { email, otp, newPassword, confirmNewPassword } = req.body;
+    if (newPassword !== confirmNewPassword) {
+      errors.confirmNewPassword = "Password Mismatch";
+      return res.status(400).json(errors);
+    }
+
+    const faculty = await Faculty.findOne({ email });
+    if (faculty.otp !== otp) {
+      errors.otp = "Invalid OTP..Please try again";
+      return res.status(400).json(errors);
+    }
+
+    let hashedPassword;
+    hashedPassword = await bcrypt.compare(newPassword, 10);
+    faculty.password = hashedPassword;
+    await faculty.save();
+
+    return res.status(200).json({ message: "Password Changed" });
+  } catch (err) {
+    console.log("Error in submitting OTP", err.message);
+    return res.status(400).json(err);
+  }
+};
+
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const { email, facultyMobileNumber } = req.body;
+    const userImg = await bufferConversion(
+      req.file.originalName,
+      req.file.buffer
+    );
+    const imgResponse = await cloudinary.v2.uploader.upload(userImg);
+
+    const faculty = await Faculty.findOne({ email });
+    if (facultyMobileNumber) {
+      faculty.facultyMobileNumber = facultyMobileNumber;
+      await faculty.save();
+    }
+
+    faculty.avatar = imgResponse.secure_url;
+    await faculty.save();
+    res.status(200).json(faculty);
+  } catch (err) {
+    console.log("Error in updating Profile", err.message);
+  }
+};
