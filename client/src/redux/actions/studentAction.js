@@ -10,6 +10,83 @@ import {
   SET_FLAG,
 } from "../actionTypes";
 
+export const chatHistory = (data) => {
+  return {
+    type: "SET_CHAT",
+    payload: data,
+  };
+};
+
+export const chatHelp = (data) => {
+  return {
+    type: "CHAT_HELPER",
+    payload: data,
+  };
+};
+
+export const getStudentByRegNumHelper = (data) => {
+  return {
+    type: "GET_STUDENT_BY_REG_NUM",
+    payload: data,
+  };
+};
+
+export const setStudent = (data) => {
+  return {
+    type: "SET_STUDENT",
+    payload: data,
+  };
+};
+
+const privateConversation = (data) => {
+  return {
+    type: "GET_PRIVATE_CONVERSATION",
+    payload: data,
+  };
+};
+
+const privateConversation2 = (data) => {
+  return {
+    type: "GET_PRIVATE_CONVERSATION2",
+    payload: data,
+  };
+};
+
+const newerChatsHelper = (data) => {
+  return {
+    type: "GET_NEWER_CHATS",
+    payload: data,
+  };
+};
+
+const previousChatsHelper = (data) => {
+  return {
+    type: "GET_PREVIOUS_CHATS",
+    payload: data,
+  };
+};
+
+const getAllSubjectsHelper = (data) => {
+  return {
+    type: "GET_ALL_SUBJECTS",
+    payload: data,
+  };
+};
+
+const fetchAttendenceHelper = (data) => {
+  return {
+    type: "GET_ATTENDENCE",
+    payload: data,
+  };
+};
+
+const getMarksHelper = (data) => {
+  return {
+    type: "GET_MARKS",
+    payload: data,
+  };
+};
+
 export const studentLogin = (studentCredentials) => {
   return async (dispatch) => {
     try {
@@ -19,7 +96,7 @@ export const studentLogin = (studentCredentials) => {
       );
       const { token } = data;
 
-      localStorgae.setItem("studentToken", token);
+      localStorage.setItem("studentToken", token);
       authToken(token);
 
       const decoded = jwt_decode(token);
@@ -54,7 +131,7 @@ export const chatHelper = (name) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post("/api/student/getStudentByName", name);
-      dispatch(chatHelper(data.result));
+      dispatch(chatHelp(data.result));
     } catch (err) {
       console.log("Error in getting recent messages");
     }
@@ -126,5 +203,103 @@ export const getPrivateConversation = (roomId) => {
     } catch (err) {
       console.log("Error in sendign message", err.message);
     }
+  };
+};
+
+export const getPrivateConversation2 = (roomId) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(`/api/student/chat/${roomId}`);
+      dispatch(privateConversation2(data.result));
+    } catch (err) {
+      console.log("Error in sending message", err.emssage);
+    }
+  };
+};
+
+export const previousChats = (senderName) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(
+        `/api/student/chat/previousChats/${senderName}`
+      );
+      dispatch(previousChatsHelper(data.result));
+    } catch (err) {
+      console.log("Error in sending message", err.message);
+    }
+  };
+};
+
+export const newerChats = (receiverName) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(
+        `/api/student/chat/newerChats/${receiverName}`
+      );
+      dispatch(newerChatsHelper(data.result));
+    } catch (err) {
+      console.log("Error in sending message", err.message);
+    }
+  };
+};
+
+export const studentUpdate = (updatedData) => {
+  return async () => {
+    try {
+      const { data } = await axios.post(
+        `/api/student/updateProfile`,
+        updatedData
+      );
+    } catch (err) {
+      console.log("Error in updating student info", err.message);
+    }
+  };
+};
+
+export const getAllSubjects = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get("/api/student/getSubjects");
+      dispatch(getAllSubjectsHelper(data.result));
+    } catch (err) {
+      console.log("Error in getting subjects", err.message);
+    }
+  };
+};
+
+export const fetchAttendance = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get("/api/student/checkAttendance");
+      dispatch(fetchAttendenceHelper(data.result));
+    } catch (err) {
+      console.log("Error in fetching attendance", err.message);
+    }
+  };
+};
+
+export const getMarks = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get("/api/student/getMarks");
+      dispatch(getMarksHelper(data.result));
+    } catch (err) {
+      console.log("Error in getting marks", err.message);
+    }
+  };
+};
+
+export const setStudentUser = (data) => {
+  return {
+    type: SET_STUDENT,
+    payload: data,
+  };
+};
+
+export const studentLogout = () => {
+  (dispatch) => {
+    localStorage.removeItem("studentToken");
+    authToken(false);
+    dispatch(setStudent({}));
   };
 };
