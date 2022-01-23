@@ -117,7 +117,7 @@ export const studentUpdatePassword = (passwordData) => {
         "/api/student/updatePassword",
         passwordData
       );
-      alert("Password Updated Successfully");
+      //alert("Password Updated Successfully");
     } catch (err) {
       dispatch({
         type: SET_ERRORS_HELPER,
@@ -147,7 +147,7 @@ export const getStudentByRegNum = (registrationNumber) => {
       );
       dispatch(getStudentByRegNumHelper(data.result));
     } catch (err) {
-      console.log();
+      console.log(err);
     }
   };
 };
@@ -171,7 +171,7 @@ export const submitOTPStudent = (newPassword, history) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post("/api/student/postOTP", newPassword);
-      alert("Password updated. Please login again");
+      //alert("Password updated. Please login again");
       history.push("/");
     } catch (err) {
       dispatch({
@@ -199,9 +199,9 @@ export const getPrivateConversation = (roomId) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.get(`/api/student/chat/${roomId}`);
-      dispatch(getPrivateConversation(data.result));
+      dispatch(privateConversation(data.result));
     } catch (err) {
-      console.log("Error in sendign message", err.message);
+      console.log("Error in sending message", err.message);
     }
   };
 };
@@ -296,10 +296,8 @@ export const setStudentUser = (data) => {
   };
 };
 
-export const studentLogout = () => {
-  (dispatch) => {
-    localStorage.removeItem("studentToken");
-    authToken(false);
-    dispatch(setStudent({}));
-  };
+export const studentLogout = () => (dispatch) => {
+  localStorage.removeItem("studentToken");
+  authToken(false);
+  dispatch(setStudent({}));
 };

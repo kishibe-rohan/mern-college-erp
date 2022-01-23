@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useSelector } from "react-redux";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import authToken from "./redux/utils/authToken";
+import store from "./redux/store";
+
+import { setFacultyUser, facultyLogout } from "./redux/actions/facultyAction";
+import {
+  setAdminUser,
+  adminLogout,
+  adminGetAllStudent,
+} from "./redux/actions/adminAction";
+import { setStudentUser, studentLogout } from "./redux/actions/studentAction";
+
+import { FacultyStudentLogin, FacultyDashboard } from "./pages";
 
 function App() {
+  const store = useSelector((store) => store);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<FacultyStudentLogin />} />
+          <Route exact path="/faculty" element={<FacultyDashboard />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

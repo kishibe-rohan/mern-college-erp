@@ -1,10 +1,9 @@
 import axios from "axios";
-import { useAlert } from "react-alert";
 import authToken from "../utils/authToken";
 import jwt_decode from "jwt-decode";
 import { SET_ADMIN, SET_ERRORS, GET_SUBJECTS } from "../actionTypes";
 
-const alert = useAlert();
+
 
 const setAdmin = (data) => {
   return {
@@ -95,7 +94,7 @@ export const adminGetAllSubjects = () => {
       const { data } = await axios.get("/api/admin/getSubjects");
       dispatch(getSubjectsHelper(data));
     } catch (err) {
-      alert.error("Error in fetching subjects");
+      alert("Error in fetching subjects");
     }
   };
 };
@@ -126,7 +125,7 @@ export const adminAddStudent = (studentCredential) => {
         studentCredential
       );
       dispatch(adminAddStudentFlag(true));
-      alert.success("Student Added Successfully");
+      alert("Student Added Successfully");
     } catch (err) {
       dispatch({
         type: SET_ERRORS,
@@ -144,7 +143,7 @@ export const adminAddSubject = (subjectCredential) => {
         subjectCredential
       );
       dispatch(adminAddSubjectFlag(true));
-      alert.success("Subject Added Successfully");
+      alert("Subject Added Successfully");
     } catch (err) {
       dispatch({
         type: SET_ERRORS,
@@ -162,7 +161,7 @@ export const adminAddAdmin = (adminCredentails) => {
         adminCredentails
       );
       dispatch(adminAddAdminFlag(true));
-      alert.success("Admin Added Successfully");
+      alert("Admin Added Successfully");
     } catch (err) {
       dispatch({
         type: SET_ERRORS,
