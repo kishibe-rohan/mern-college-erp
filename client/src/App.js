@@ -13,7 +13,11 @@ import {
 } from "./redux/actions/adminAction";
 import { setStudentUser, studentLogout } from "./redux/actions/studentAction";
 
-import { FacultyStudentLogin, FacultyDashboard } from "./pages";
+import {
+  FacultyStudentLogin,
+  FacultyDashboard,
+  StudentDashboard,
+} from "./pages";
 
 function App() {
   const store = useSelector((store) => store);
@@ -23,6 +27,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<FacultyStudentLogin />} />
           <Route exact path="/faculty" element={<FacultyDashboard />} />
+          <Route exact path="/home" element={<StudentDashboard />} />
         </Routes>
       </Router>
     </>
