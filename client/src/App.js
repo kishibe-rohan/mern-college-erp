@@ -17,6 +17,9 @@ import {
   FacultyStudentLogin,
   FacultyDashboard,
   StudentDashboard,
+  StudentSubjectList,
+  StudentPerformance,
+  StudentAttendance,
 } from "./pages";
 
 function App() {
@@ -28,6 +31,21 @@ function App() {
           <Route exact path="/" element={<FacultyStudentLogin />} />
           <Route exact path="/faculty" element={<FacultyDashboard />} />
           <Route exact path="/home" element={<StudentDashboard />} />
+          <Route
+            exact
+            path="/student/subjects"
+            element={<StudentSubjectList />}
+          />
+          <Route
+            exact
+            path="/student/performance"
+            element={<StudentPerformance />}
+          />
+          <Route
+            exact
+            path="/student/attendance"
+            element={<StudentAttendance />}
+          />
         </Routes>
       </Router>
     </>
