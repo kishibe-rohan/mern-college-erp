@@ -20,6 +20,7 @@ import {
   StudentSubjectList,
   StudentPerformance,
   StudentAttendance,
+  StudentUpdateProfile,
 } from "./pages";
 
 function App() {
@@ -45,6 +46,11 @@ function App() {
             exact
             path="/student/attendance"
             element={<StudentAttendance />}
+          />
+          <Route
+            exact
+            path="/student/update"
+            element={<StudentUpdateProfile />}
           />
         </Routes>
       </Router>

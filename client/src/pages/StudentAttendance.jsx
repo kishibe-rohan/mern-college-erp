@@ -29,8 +29,8 @@ text-align: center;
 const StudentAttendance = ({history}) => {
     const columns = [
         {field:"id",headerName:"Subject No.",flex:0.3},
-        {field:"code",headerName:"Subject Code",flex:1},
-        {field:"name",headerName:"Subject Name",flex:1},
+        {field:"code",headerName:"Subject Code",flex:0.5},
+        {field:"name",headerName:"Subject Name",flex:0.5},
         {field:"max",headerName:"Max Hours",flex:0.3},
         {field:"present",headerName:"Present Hours",flex:0.3},
         {field:"absent",headerName:"Absent Hours",flex:0.3},
