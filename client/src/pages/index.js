@@ -5,3 +5,4 @@ export { default as StudentSubjectList } from "./Student/StudentSubjectList";
 export { default as StudentPerformance } from "./Student/StudentPerformance";
 export { default as StudentAttendance } from "./StudentAttendance";
 export { default as StudentUpdateProfile } from "./Student/StudentUpdateProfile";
+export { default as FacultyUpdateProfile } from "./Faculty/FacultyUpdateProfile";

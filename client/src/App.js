@@ -21,6 +21,7 @@ import {
   StudentPerformance,
   StudentAttendance,
   StudentUpdateProfile,
+  FacultyUpdateProfile,
 } from "./pages";
 
 function App() {
@@ -51,6 +52,11 @@ function App() {
             exact
             path="/student/update"
             element={<StudentUpdateProfile />}
+          />
+          <Route
+            exact
+            path="/faculty/update"
+            element={<FacultyUpdateProfile />}
           />
         </Routes>
       </Router>

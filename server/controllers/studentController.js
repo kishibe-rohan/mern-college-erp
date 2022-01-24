@@ -317,6 +317,82 @@ exports.getAllMarks = async (req, res, next) => {
   }
 };
 
+exports.differentChats = async (req, res, next) => {
+  try {
+    const { receiverName } = req.params;
+    const newChatsTemp = await Message.find({ senderName: receiverName });
+
+    var filteredObjTemp = newChatsTemp.map((obj) => {
+      let filteredObj = {
+        senderName: obj.senderName,
+        receiverName: obj.receiverName,
+        senderRegistrationNumber: obj.senderRegistrationNumber,
+        receiverRegistrationNumber: obj.receiverRegistrationNumber,
+        receiverId: obj.receiverId,
+      };
+
+      return filteredObj;
+    });
+
+    let filteredListTemp = [
+      ...new Set(filteredObjTemp.map(JSON.stringify)),
+    ].map(JSON.parse);
+    const newChats = await Message.find({ receiverName });
+
+    var filteredObj = newChats.map((obj) => {
+      let filteredObj = {
+        senderName: obj.senderName,
+        receiverName: obj.receiverName,
+        senderRegistrationNumber: obj.senderRegistrationNumber,
+        receiverRegistrationNumber: obj.receiverRegistrationNumber,
+        receiverId: obj.receiverId,
+      };
+      return filteredObj;
+    });
+
+    let filteredListPro = [...new Set(filteredObj.map(JSON.stringify))].map(
+      JSON.parse
+    );
+    for (var i = 0; i < filteredListPro.length; i++) {
+      for (var j = 0; j < filteredListTemp.length; j++) {
+        if (
+          filteredListPro[i].senderName === filteredListTemp[j].receiverName
+        ) {
+          filteredListPro.splice(i, 1);
+        }
+      }
+    }
+    res.status(200).json({ result: filteredListPro });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+exports.previousChats = async (req, res, next) => {
+  try {
+    const { senderName } = req.params;
+    const newChats = await Message.find({ senderName });
+
+    var filteredObj = newChats.map((obj) => {
+      let filteredObj = {
+        senderName: obj.senderName,
+        receiverName: obj.receiverName,
+        senderRegistrationNumber: obj.senderRegistrationNumber,
+        receiverRegistrationNumber: obj.receiverRegistrationNumber,
+        receiverId: obj.receiverId,
+      };
+      return filteredObj;
+    });
+    var filteredList = [...new Set(filteredObj.map(JSON.stringify))].map(
+      JSON.parse
+    );
+    //console.log("filterdList",filteredList)
+    res.status(200).json({ result: filteredList });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
 exports.updateProfile = async (req, res, next) => {
   try {
     const { email, studentMobileNumber, fatherName, fatherMobileNumber } =
