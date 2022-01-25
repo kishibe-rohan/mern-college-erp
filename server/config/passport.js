@@ -4,7 +4,7 @@ const Faculty = require("../models/Faculty");
 const Student = require("../models/student");
 const Admin = require("../models/admin");
 
-const keys = require("./keys");
+const keys = require("./key");
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();

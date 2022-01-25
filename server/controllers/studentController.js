@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypts");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const keys = require("../config/key");
@@ -22,7 +22,7 @@ exports.studentLogin = async (req, res, next) => {
 
   const student = await Student.findOne({ registrationNumber });
   if (!student) {
-    errors.registrationNumber = "Regsitration number not found";
+    errors.registrationNumber = "Registration number not found";
     return res.status(404).json(errors);
   }
 

@@ -1,6 +1,6 @@
 const express = require("express");
 const http = require("http");
-const socket = require("socket");
+const socket = require("socket.io");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const cors = require("cors");
@@ -67,12 +67,11 @@ const PORT = process.env.PORT || 5000;
 //Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => {
-    (_response.database = "Healthy"), console.log("Database Connected");
-    console.log("server Started on PORT", PORT);
+  .then((data) => {
+    _response.database = "Healthy";
+    console.log(`MongoDB connected with server ${data.connection.host}`);
   })
   .catch((err) => {
-    _response.database = "Unhealthy";
     console.log("Error in connecting to MongoDB", err.message);
   });
 
@@ -83,4 +82,5 @@ app.use("/", (req, res) => {
 //Start Server
 server.listen(PORT, () => {
   _response.server = "Healthy";
+  console.log(`Server running on port: ${PORT}`);
 });

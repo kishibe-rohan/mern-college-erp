@@ -63,7 +63,7 @@ router.get(
 router.get(
   "/getMarks",
   passport.authenticate("jwt", { session: false }),
-  getMarks
+  getAllMarks
 );
 router.get(
   "/getAllSubjects",

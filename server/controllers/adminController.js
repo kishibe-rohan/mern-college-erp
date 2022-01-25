@@ -1,4 +1,4 @@
-const bcrypt = require("brcyptjs");
+const bcrypt = require("bcryptjs");
 const gravatar = require("gravatar");
 const jwt = require("jsonwebtoken");
 
@@ -94,7 +94,7 @@ exports.addAdmin = async (req, res, next) => {
       response: newAdmin,
     });
   } catch (err) {
-    return res.status(400).json({ success: false, message: error.message });
+    return res.status(400).json({ success: false, message: err.message });
   }
 };
 
@@ -155,7 +155,6 @@ exports.addStudent = async (req, res, next) => {
       fatherName,
       department,
       section,
-      dob,
       studentMobileNumber,
       fatherMobileNumber,
     } = req.body;
@@ -313,7 +312,7 @@ exports.addSubject = async (req, res, next) => {
 
     const { totalLectures, department, subjectCode, subjectName, year } =
       req.body;
-    const subject = await Subject.find({ subjectCode });
+    const subject = await Subject.findOne({ subjectCode });
 
     if (subject) {
       errors.subjectCode = "Given Subject is already added";

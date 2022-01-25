@@ -6,3 +6,5 @@ export { default as StudentPerformance } from "./Student/StudentPerformance";
 export { default as StudentAttendance } from "./StudentAttendance";
 export { default as StudentUpdateProfile } from "./Student/StudentUpdateProfile";
 export { default as FacultyUpdateProfile } from "./Faculty/FacultyUpdateProfile";
+export { default as StudentUpdatePassword } from "./Student/StudentUpdatePassword";
+export { default as FacultyUpdatePassword } from "./Faculty/FacultyUpdatePassword";

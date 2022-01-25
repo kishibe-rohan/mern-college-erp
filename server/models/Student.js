@@ -28,6 +28,13 @@ const studentSchema = new Schema({
       ref: "subject",
     },
   ],
+  fatherName: {
+    type: String,
+  },
+
+  registrationNumber: {
+    type: String,
+  },
   department: {
     type: String,
     required: true,
@@ -39,19 +46,20 @@ const studentSchema = new Schema({
   batch: {
     type: String,
   },
-  fatherName: {
-    type: String,
+
+  studentMobileNumber: {
+    type: Number,
   },
   fatherMobileNumber: {
     type: Number,
   },
-  studentMobileNumber: {
-    type: Number,
-  },
-  registrationNumber: {
+  fatherName: {
     type: String,
   },
   otp: {
     type: String,
   },
 });
+
+module.exports =
+  mongoose.models.student || mongoose.model("student", studentSchema);

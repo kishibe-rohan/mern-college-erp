@@ -1,16 +1,26 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+//Utils
 const sendEmail = require("../utils/nodemailer");
 const bufferConversion = require("../utils/bufferConversion");
 const cloudinary = require("../utils/cloudinary");
 
 const keys = require("../config/key");
 
+//Validation
+const validateFacultyLoginInput = require("../validation/facultyLogin");
+const validateFetchStudentsInput = require("../validation/facultyFetchStudent");
+const validateFacultyUpdatePassword = require("../validation/facultyUpdatePassword");
+const validateForgotPassword = require("../validation/forgotPassword");
+const validateOTP = require("../validation/otpValidation");
+const validateFacultyUploadMarks = require("../validation/facultyUploadMarks");
+
+//Models
 const Student = require("../models/Student");
 const Subject = require("../models/Subject");
 const Faculty = require("../models/Faculty");
-const Attendance = require("../models/Attendence");
+const Attendance = require("../models/Attendance");
 const Mark = require("../models/Marks");
 
 exports.facultyLogin = async (req, res, next) => {

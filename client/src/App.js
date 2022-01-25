@@ -21,8 +21,46 @@ import {
   StudentPerformance,
   StudentAttendance,
   StudentUpdateProfile,
+  StudentUpdatePassword,
   FacultyUpdateProfile,
+  FacultyUpdatePassword,
 } from "./pages";
+
+//Handle JWT Token
+if (window.localStorage.facultyToken) {
+  authToken(localStorage.facultyToken);
+  const decoded = jwt_decode(localStorage.facultyToken);
+  store.dispatch(setFacultyUser(decoded));
+
+  //Check if token expired
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    store.dispatch(facultyLogout());
+    window.location.href = "/";
+  }
+} else if (window.localStorage.studentToken) {
+  authToken(localStorage.studentToken);
+  const decoded = jwt_decode(localStorage.studentToken);
+  store.dispatch(setStudentUser(decoded));
+
+  //Check if token expired
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    store.dispatch(studentLogout());
+    window.location.href = "/";
+  }
+} else if (window.localStorage.adminToken) {
+  authToken(localStorage.adminToken);
+  const decoded = jwt_decode(localStorage.adminToken);
+  store.dispatch(setAdminUser(decoded));
+
+  //Check if token expired
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    store.dispatch(adminLogout());
+    window.location.href = "/";
+  }
+}
 
 function App() {
   const store = useSelector((store) => store);
@@ -57,6 +95,16 @@ function App() {
             exact
             path="/faculty/update"
             element={<FacultyUpdateProfile />}
+          />
+          <Route
+            exact
+            path="/student/updatePassword"
+            element={<StudentUpdatePassword />}
+          />
+          <Route
+            exact
+            path="/faculty/updatePassword"
+            element={<FacultyUpdatePassword />}
           />
         </Routes>
       </Router>
