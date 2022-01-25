@@ -63,7 +63,7 @@ const StudentNavbar = () => {
              <Wrapper>
                  <Left>
                      <Link to="/">
-                         <Logo>ERP</Logo>
+                         <Logo>STUDENT</Logo>
                      </Link>
                  </Left>
                  <Right>

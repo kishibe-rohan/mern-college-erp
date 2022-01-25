@@ -1,6 +1,7 @@
 export { default as FacultyStudentLogin } from "./FacultyStudentLogin";
 export { default as FacultyDashboard } from "./FacultyDashboard";
 export { default as StudentDashboard } from "./StudentDashboard";
+export { default as AdminDashboard } from "./AdminDashboard";
 export { default as StudentSubjectList } from "./Student/StudentSubjectList";
 export { default as StudentPerformance } from "./Student/StudentPerformance";
 export { default as StudentAttendance } from "./StudentAttendance";
@@ -8,3 +9,6 @@ export { default as StudentUpdateProfile } from "./Student/StudentUpdateProfile"
 export { default as FacultyUpdateProfile } from "./Faculty/FacultyUpdateProfile";
 export { default as StudentUpdatePassword } from "./Student/StudentUpdatePassword";
 export { default as FacultyUpdatePassword } from "./Faculty/FacultyUpdatePassword";
+export { default as AdminGetFaculty } from "./Admin/AdminGetFaculty";
+export { default as AdminGetStudents } from "./Admin/AdminGetStudents";
+export { default as AdminGetSubjects } from "./Admin/AdminGetSubjects";

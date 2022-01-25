@@ -15,6 +15,10 @@ import { setStudentUser, studentLogout } from "./redux/actions/studentAction";
 
 import {
   FacultyStudentLogin,
+  AdminDashboard,
+  AdminGetFaculty,
+  AdminGetStudents,
+  AdminGetSubjects,
   FacultyDashboard,
   StudentDashboard,
   StudentSubjectList,
@@ -71,6 +75,10 @@ function App() {
           <Route exact path="/" element={<FacultyStudentLogin />} />
           <Route exact path="/faculty" element={<FacultyDashboard />} />
           <Route exact path="/home" element={<StudentDashboard />} />
+          <Route exact path="/admin" element={<AdminDashboard />} />
+          <Route exact path="/admin/faculties" element={<AdminGetFaculty />} />
+          <Route exact path="/admin/students" element={<AdminGetStudents />} />
+          <Route exact path="/admin/subjects" element={<AdminGetSubjects />} />
           <Route
             exact
             path="/student/subjects"

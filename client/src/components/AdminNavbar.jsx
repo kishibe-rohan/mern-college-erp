@@ -53,7 +53,7 @@ a{
 `
 
 
-const FacultyNavbar = () => {
+const AdminNavbar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [name,setName] = useState("");
@@ -63,7 +63,7 @@ const FacultyNavbar = () => {
              <Wrapper>
                  <Left>
                      <Link to="/">
-                         <Logo>FACULTY</Logo>
+                         <Logo>ADMIN</Logo>
                      </Link>
                  </Left>
                  <Right>
@@ -91,4 +91,4 @@ const FacultyNavbar = () => {
     )
 }
 
-export default FacultyNavbar;
+export default AdminNavbar;
