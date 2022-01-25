@@ -12,3 +12,4 @@ export { default as FacultyUpdatePassword } from "./Faculty/FacultyUpdatePasswor
 export { default as AdminGetFaculty } from "./Admin/AdminGetFaculty";
 export { default as AdminGetStudents } from "./Admin/AdminGetStudents";
 export { default as AdminGetSubjects } from "./Admin/AdminGetSubjects";
+export { default as StudentSearch } from "./Student/StudentSearch";
