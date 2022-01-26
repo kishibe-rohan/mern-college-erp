@@ -19,7 +19,12 @@ import {
   AdminGetFaculty,
   AdminGetStudents,
   AdminGetSubjects,
+  AdminAddFaculty,
+  AdminAddStudent,
+  AdminAddSubject,
   FacultyDashboard,
+  FacultyUploadMarks,
+  FacultyAttendance,
   StudentDashboard,
   StudentSubjectList,
   StudentPerformance,
@@ -27,6 +32,7 @@ import {
   StudentUpdateProfile,
   StudentUpdatePassword,
   StudentSearch,
+  StudentDetails,
   FacultyUpdateProfile,
   FacultyUpdatePassword,
 } from "./pages";
@@ -82,6 +88,21 @@ function App() {
           <Route exact path="/admin/subjects" element={<AdminGetSubjects />} />
           <Route
             exact
+            path="/admin/add/faculties"
+            element={<AdminAddFaculty />}
+          />
+          <Route
+            exact
+            path="/admin/add/students"
+            element={<AdminAddStudent />}
+          />
+          <Route
+            exact
+            path="/admin/add/subjects"
+            element={<AdminAddSubject />}
+          />
+          <Route
+            exact
             path="/student/subjects"
             element={<StudentSubjectList />}
           />
@@ -98,6 +119,11 @@ function App() {
           <Route exact path="/student/search" element={<StudentSearch />} />
           <Route
             exact
+            path="/profile/:registrationNumber"
+            element={<StudentDetails />}
+          />
+          <Route
+            exact
             path="/student/update"
             element={<StudentUpdateProfile />}
           />
@@ -105,6 +131,12 @@ function App() {
             exact
             path="/faculty/update"
             element={<FacultyUpdateProfile />}
+          />
+          <Route exact path="/faculty/marks" element={<FacultyUploadMarks />} />
+          <Route
+            exact
+            path="/faculty/attendance"
+            element={<FacultyAttendance />}
           />
           <Route
             exact
