@@ -3,6 +3,10 @@ import {CircularProgress} from '@material-ui/core'
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
+import { facultyLogin } from '../redux/actions/facultyAction'
+import { studentLogin } from '../redux/actions/studentAction'
+
+import {useAlert} from 'react-alert'
 
 const Container = styled.div` 
 width:100vw;
@@ -77,15 +81,14 @@ color: white;
     cursor: pointer;
 `
 
-const LoginInfo = styled.button`
-height:50px;
-border-radius:10px;
-border:none;
-background-color: tomato;
-color: white;
+const LoginInfo = styled.p`
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
+    >a{
+        text-decoration:none;
+        color:tomato;
+    }
 `
 
 
@@ -93,6 +96,7 @@ color: white;
 const FacultyStudentLogin = () => {
     const dispatch = useDispatch();
     const store = useSelector((state) => state)
+    const alert = useAlert();
     const {isAuthenticated} = useSelector((state) => state.student);
     const {isAuthenticated:facultyAuthenticated} = useSelector((state) => state.faculty)
 
@@ -105,6 +109,7 @@ const FacultyStudentLogin = () => {
     const [errorsHelper, setErrorsHelper] = useState({})
     const [isFacultyLoading, setIsFacultyLoading] = useState(false)
     const [isStudentLoading, setIsStudentLoading] = useState(false)
+    const [isStudentLogin,setIsStudentLogin] = useState(true);
 
     const navigate = useNavigate();
 
@@ -112,6 +117,7 @@ const FacultyStudentLogin = () => {
         if(facultyAuthenticated)
         {
             navigate('/faculty')
+            alert.success("Faculty Login Successful");
         }
     },[facultyAuthenticated])
 
@@ -119,6 +125,7 @@ const FacultyStudentLogin = () => {
         if(isAuthenticated)
         {
             navigate('/home')
+            alert.success("Student Login Successful");
         }
     },[isAuthenticated])
 
@@ -126,6 +133,7 @@ const FacultyStudentLogin = () => {
         if(store.error)
         {
             setErrors(store.error)
+            alert.error("Invalid Credentials..Try again!");
         }
     },[store.error])
 
@@ -135,7 +143,44 @@ const FacultyStudentLogin = () => {
         }
     }, [store.errorHelper])
 
-    const isLogin = true;
+    const studentLoginHandler = (e) => {
+        e.preventDefault();
+        setIsStudentLoading(true);
+        dispatch(studentLogin({registrationNumber:studentRegNum,password:studentPassword}))
+    }
+
+    const facultyLoginHandler = (e) => {
+        e.preventDefault();
+        setIsFacultyLoading(true);
+        dispatch(facultyLogin({registrationNumber:facultyRegNum,password:facultyPassword}))
+    }
+
+    useEffect(() => {
+        if(store.error || facultyAuthenticated){
+            setIsFacultyLoading(false)
+        }
+        else{
+            setIsFacultyLoading(true)
+        }
+
+    },[store.error,facultyAuthenticated])
+
+    useEffect(() => {
+        if(store.errorHelper || isAuthenticated)
+        {
+            setIsStudentLoading(false);
+        }
+        else{
+            setIsStudentLoading(true);
+        }
+
+    },[store.errorHelper,isAuthenticated])
+
+    const handleToggle = (e) => {
+        e.preventDefault();
+        setIsStudentLogin(prev => !prev);
+    }
+   
 
   return (
     <Container>
@@ -146,32 +191,36 @@ const FacultyStudentLogin = () => {
             </Left>
             <Right>
                 {
-                   isLogin? (
+                   isStudentLogin? (
                        <LoginBox>
-                           <LoginInput placeholder="Student GR Number" type="text" required/>
-                           <LoginInput placeholder="Password" type="password" required/>
-                           <LoginButton type="submit">
+                           <LoginInput placeholder="Student GR Number" type="text" onChange={(e) => setStudentRegNum(e.target.value)} required/>
+                           <LoginInput placeholder="Password" type="password" onChange={(e) => setStudentPassword(e.target.value)} required/>
+                           <LoginButton type="submit" onClick={studentLoginHandler}>
                                Log In
                            </LoginButton>
-                       <LoginInfo>
+                       <LoginInfo onClick={handleToggle}>
                            Login as Faculty?
                        </LoginInfo>
-                       <LoginInfo style={{backgroundColor:"#03045e"}}>
+                       <LoginInfo>
+                          <Link to="/forgotPassword/student">
                            Forgot Password?
+                           </Link>
                        </LoginInfo>
                        </LoginBox>
                    ):(
                       <LoginBox>
-                           <LoginInput placeholder="Faculty GR Number" type="text" required/>
-                           <LoginInput placeholder="Password" type="password" required/>
-                           <LoginButton type="submit">
+                           <LoginInput placeholder="Faculty GR Number" onChange={(e) => setFacultyRegNum(e.target.value)} type="text" required/>
+                           <LoginInput placeholder="Password" onChange={(e) => setFacultyPassword(e.target.value)} type="password" required/>
+                           <LoginButton type="submit" onClick={facultyLoginHandler}>
                                Log In
                            </LoginButton>
-                       <LoginInfo>
+                       <LoginInfo onClick={handleToggle}>
                            Login as Student?
                        </LoginInfo>
-                       <LoginInfo style={{backgroundColor:"green"}}>
+                       <LoginInfo>
+                           <Link to="/forgotPassword/user">
                            Forgot Password?
+                           </Link>
                        </LoginInfo>
                       </LoginBox>
                    )

@@ -35,6 +35,8 @@ import {
   StudentDetails,
   FacultyUpdateProfile,
   FacultyUpdatePassword,
+  ForgotPassword,
+  Chat,
 } from "./pages";
 
 //Handle JWT Token
@@ -148,6 +150,12 @@ function App() {
             path="/faculty/updatePassword"
             element={<FacultyUpdatePassword />}
           />
+          <Route
+            exact
+            path="/forgotPassword/:user"
+            element={<ForgotPassword />}
+          />
+          <Route exact path="/chat/:room" element={<Chat />} />
         </Routes>
       </Router>
     </>

@@ -19,3 +19,5 @@ export { default as AdminAddStudent } from "./Admin/AdminAddStudent";
 export { default as AdminAddFaculty } from "./Admin/AdminAddFaculty";
 export { default as AdminAddSubject } from "./Admin/AdminAddSubject";
 export { default as StudentSearch } from "./Student/StudentSearch";
+export { default as ForgotPassword } from "./ForgotPassword";
+export { default as Chat } from "./Chat";
