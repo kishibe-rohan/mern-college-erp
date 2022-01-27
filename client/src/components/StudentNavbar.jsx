@@ -2,8 +2,10 @@ import React, {useState,useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector} from 'react-redux'
 
-import {Person,Dashboard,Ballot,VpnKey,ExitToApp,Group} from '@material-ui/icons'
+import {Person,Dashboard,Ballot,VpnKey,ExitToApp,Group,ChatBubble,Chat} from '@material-ui/icons'
 import styled from 'styled-components'
+
+import {studentLogout,newerChats,previousChats} from '../redux/actions/studentAction'
 
 const Container = styled.div`
  width:100vw;
@@ -49,7 +51,7 @@ margin-left:25px;
 a{
     text-decoration:none;
     color:white;
-}
+};
 `
 
 
@@ -57,33 +59,97 @@ const StudentNavbar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [name,setName] = useState("");
+  
+    const student = useSelector((store) => store.student)
+    
+    useEffect(() => {
+      if(student.student.student.name)
+      {
+        nameHandler();
+      }
+    },[student.student.student.name])
+
+    useEffect(() => {
+      dispatch(newerChats(student.student.student.name));
+      dispatch(previousChats(student.student.student.name));
+    },[student.newerChats.length])
+
+    const logoutHandler = () => {
+      dispatch(studentLogout());
+      navigate('/');
+      alert.success("Student Logout Successful");
+    }
+
+    const nameHandler = () => {
+      setName(student.student.student.name)
+    }
+
+    const home = () => {
+      navigate('/home')
+    }
+
+    const updateProfile = () => {
+      navigate('/student/update')
+    }
+
+    const updatePassword = () => {
+      navigate('/student/updatePassword')
+    }
+
+    const subjectList = () => {
+      navigate('/student/subjects')
+    }
+
+    const marksList = () => {
+      navigate('/student/performace')
+    }
+
+    const attendance = () => {
+      navigate('/student/attendance')
+    }
+
+    const chatList = () => {
+      navigate('/student/search')
+    }
 
     return(
          <Container>
              <Wrapper>
                  <Left>
                      <Link to="/">
-                         <Logo>STUDENT</Logo>
+                         <Logo>ERP</Logo>
                      </Link>
                  </Left>
                  <Right>
                      <MenuItem>
-                       <Person style={{color:"#0077b6"}}/>
+                     {student && <img onClick={home} src={student.student.student.avatar.url} style={{height:"28px",width:"28px",borderRadius:"50%"}}/> }
                      </MenuItem>
                      <MenuItem>
-                       <Dashboard style={{color:"#0077b6"}}/>
+                       <Person onClick={updateProfile} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       <VpnKey style={{color:"#0077b6"}}/>
+                       <Dashboard onClick={marksList} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       <Group style={{color:"#0077b6"}}/>
+                       <VpnKey onClick={updatePassword} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       <Ballot style={{color:"#0077b6"}}/>
+                       <Group onClick={attendance} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       <ExitToApp style={{color:"#0077b6"}}/>
+                       <Ballot onClick={subjectList} style={{color:"#0077b6"}}/>
+                     </MenuItem>
+                     <MenuItem>
+                       {
+                         student.newerChats.length > 0 ? (
+                          <Chat onClick={chatList} style={{color:"#0077b6"}}/>
+                         ):(
+                          <ChatBubble onClick={chatList} style={{color:"#0077b6"}}/>
+                         )
+                       }
+                     </MenuItem>
+                     <MenuItem>
+                       <ExitToApp onClick={logoutHandler} style={{color:"#0077b6"}}/>
                      </MenuItem>
                  </Right>
              </Wrapper>

@@ -246,9 +246,16 @@ export const newerChats = (receiverName) => {
 export const studentUpdate = (updatedData) => {
   return async () => {
     try {
-      const { data } = await axios.post(
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.put(
         `/api/student/updateProfile`,
-        updatedData
+        updatedData,
+        config
       );
     } catch (err) {
       console.log("Error in updating student info", err.message);

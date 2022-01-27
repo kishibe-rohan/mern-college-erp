@@ -325,22 +325,39 @@ exports.postOTP = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
   try {
-    const { email, facultyMobileNumber } = req.body;
-    const userImg = await bufferConversion(
-      req.file.originalName,
-      req.file.buffer
-    );
-    const imgResponse = await cloudinary.v2.uploader.upload(userImg);
+    const { email, facultyMobileNumber, registrationNumber } = req.body;
 
-    const faculty = await Faculty.findOne({ email });
-    if (facultyMobileNumber) {
-      faculty.facultyMobileNumber = facultyMobileNumber;
-      await faculty.save();
+    const faculty = await Faculty.findOne({ registrationNumber });
+
+    const { _id } = faculty;
+
+    const updatedData = {
+      email: email || faculty.email,
+      facultyMobileNumber: facultyMobileNumber || faculty.facultyMobileNumber,
+    };
+
+    if (req.body.avatar !== "") {
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "erp",
+        width: 150,
+        crop: "scale",
+      });
+
+      updatedData.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
     }
 
-    faculty.avatar = imgResponse.secure_url;
-    await faculty.save();
-    res.status(200).json(faculty);
+    const updatedFaculty = await Faculty.findByIdAndUpdate(_id, updatedData, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+
+    res.status(200).json({
+      success: true,
+    });
   } catch (err) {
     console.log("Error in updating Profile", err.message);
   }

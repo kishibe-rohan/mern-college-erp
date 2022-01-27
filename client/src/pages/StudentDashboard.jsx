@@ -1,8 +1,10 @@
 import React from 'react'
-import FacultyNavbar from '../components/FacultyNavbar'
+import {useSelector} from 'react-redux'
+import {Link,useNavigate} from 'react-router-dom'
+import StudentNavbar from '../components/StudentNavbar'
 
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+
 
 const Container = styled.div`
 display:flex;
@@ -75,44 +77,54 @@ border-bottom:0.5px solid #0077b6;
 
 
 const StudentDashboard = () => {
+    const student = useSelector((store) => store.student)
+    const navigate = useNavigate();
   return (
     <>
-    <FacultyNavbar/>
+    {
+        student.isAuthenticated ? (
+<>
+<StudentNavbar/>
     <Container>
       <Header>
           <h1>Student Profile</h1>
-          <img src="https://bsa.web.unc.edu/wp-content/uploads/sites/14595/2019/10/kushal_student_profile.jpg" />
-          <h3>Ron Doe</h3>
-          <h3>21810489</h3>
-          <Link to="/student/updateProfile">Update Profile</Link>
+          <img src={student.student.student.avatar.url} />
+          <h3>{student.student.student.name}</h3>
+          <h3>{student.student.student.registrationNumber}</h3>
+          <Link to="/student/update">Update Profile</Link>
       </Header>
       <ProfileInfo>
           <ProfileInfoItem>
               <h4>Email</h4>
-              <p>abc123@gmail.com</p>
+              <p>{student.student.student.email}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Department</h4>
-              <p>C.S.E</p>
+              <p>{student.student.student.department}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Year</h4>
-              <p>F.Y</p>
+              <p>{student.student.student.year}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Mobile Number</h4>
-              <p>+123456789</p>
+              <p>{student.student.student.studentMobileNumber}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Father Name</h4>
-              <p>Sean Doe</p>
+              <p>{student.student.student.fatherName}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Parent Number</h4>
-              <p>+123456789</p>
+              <p>{student.student.student.fatherMobileNumber}</p>
           </ProfileInfoItem>
       </ProfileInfo>
     </Container>
+</>
+        ):(
+            navigate('/')
+        )
+    }  
     </>
   )
 }

@@ -1,16 +1,27 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+//utils
 const keys = require("../config/key");
 const sendEmail = require("../utils/nodemailer");
 
+//Models
 const Student = require("../models/Student");
 const Subject = require("../models/Subject");
 const Attendance = require("../models/Attendance");
 const Message = require("../models/Message");
 const Mark = require("../models/Marks");
 
+//File Handler
+const bufferConversion = require("../utils/bufferConversion");
+const cloudinary = require("../utils/cloudinary");
+
+//Validation
 const validateStudentLoginInput = require("../validation/studentLogin");
+const validateStudentUpdatePassword = require("../validation/studentUpdatePassword");
+const validateForgotPassword = require("../validation/forgotPassword");
+const validateOTP = require("../validation/otpValidation");
+const { markAttendance } = require("./facultyController");
 
 exports.studentLogin = async (req, res, next) => {
   const { errors, isValid } = validateStudentLoginInput(req.body);
@@ -395,32 +406,47 @@ exports.previousChats = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
   try {
-    const { email, studentMobileNumber, fatherName, fatherMobileNumber } =
-      req.body;
+    const {
+      email,
+      studentMobileNumber,
+      fatherName,
+      fatherMobileNumber,
+      registrationNumber,
+    } = req.body;
 
-    const userImg = await bufferConversion(
-      req.file.originalName,
-      req.file.buffer
-    );
-    const imgResponse = await cloudinary.v2.uploader.upload(userImg);
-    const student = await Student.findOne({ email });
+    const student = await Student.findOne({ registrationNumber });
 
-    if (studentMobileNumber) {
-      student.studentMobileNumber = studentMobileNumber;
-      await student.save();
-    }
-    if (fatherName) {
-      student.fatherName = fatherName;
-      await student.save();
-    }
-    if (fatherMobileNumber) {
-      student.fatherMobileNumber = fatherMobileNumber;
-      await student.save();
+    const { _id } = student;
+
+    const updatedData = {
+      email,
+      studentMobileNumber,
+      fatherName,
+      fatherMobileNumber,
+    };
+
+    if (req.body.avatar !== "") {
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "erp",
+        width: 150,
+        crop: "scale",
+      });
+
+      updatedData.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
     }
 
-    student.avatar = imgResponse.secure_url;
-    await student.save();
-    res.status(200).json(student);
+    const updatedStudent = await Student.findByIdAndUpdate(_id, updatedData, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+
+    res.status(200).json({
+      success: true,
+    });
   } catch (err) {
     console.log("Error in updating Profile", err.message);
   }

@@ -133,7 +133,6 @@ const FacultyStudentLogin = () => {
         if(store.error)
         {
             setErrors(store.error)
-            alert.error("Invalid Credentials..Try again!");
         }
     },[store.error])
 

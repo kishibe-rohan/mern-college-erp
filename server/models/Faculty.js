@@ -12,7 +12,14 @@ const facultySchema = new Schema({
     unique: true,
   },
   avatar: {
-    type: String,
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
   },
   password: {
     type: String,

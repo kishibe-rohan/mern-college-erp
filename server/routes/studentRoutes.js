@@ -25,10 +25,9 @@ const {
 router.post("/login", studentLogin);
 router.post("/forgotPassword", forgotPassword);
 router.post("/postOTP", postOTP);
-router.post(
+router.put(
   "/updateProfile",
   passport.authenticate("jwt", { session: false }),
-  upload.single("avatar"),
   updateProfile
 );
 router.post(

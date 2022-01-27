@@ -1,11 +1,12 @@
 import React,{useState,useEffect} from 'react'
 import { useDispatch,useSelector } from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import styled from 'styled-components'
 
 import {MailOutline,Phone,PhoneIphone,SupervisorAccount} from '@material-ui/icons'
-
 import StudentNavbar from '../../components/StudentNavbar'
+import {studentUpdate,studentLogout} from '../../redux/actions/studentAction'
 
 const Container = styled.div`
 width:100vw;
@@ -104,20 +105,29 @@ width: 100%;
   box-shadow:0 2px 5px rgba(0,0,0,0.219);
 `
 const StudentUpdateProfile = () => {
-    const [email,setEmail] = useState("");
-    const [mobile,setMobile] = useState("");
-    const [fatherName,setFatherName] = useState("");
-    const [fatherMobile,setFatherMobile] = useState("");
+    const student = useSelector((store) => store.student)
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const alert = useAlert();
+
+    const [email,setEmail] = useState(student.student.student.email);
+    const [mobile,setMobile] = useState(student.student.student.studentMobileNumber);
+    const [fatherName,setFatherName] = useState(student.student.student.fatherName);
+    const [fatherMobile,setFatherMobile] = useState(student.student.student.fatherMobileNumber);
     const [avatar,setAvatar] = useState("/Profile.png");
     const [avatarPreview,setAvatarPreview] = useState("/Profile.png");
 
     const imageHandler = (e) => {
-        if(e.target.files && e.target.files[0])
+       const reader = new FileReader();
+
+       reader.onload = () => {
+        if(reader.readyState === 2)
         {
-            let img = e.target.files[0];
-            setAvatar(img);
-            setAvatarPreview(img);
+            setAvatarPreview(reader.result);
+            setAvatar(reader.result);
         }
+       }
+       reader.readAsDataURL(e.target.files[0]);
     }
 
     const fileHandler = async(e) => {
@@ -127,7 +137,13 @@ const StudentUpdateProfile = () => {
         myForm.append("email",email);
         myForm.append("fatherName",fatherName);
         myForm.append("fatherMobileNumber",fatherMobile);
+        myForm.append("registrationNumber",student.student.student.registrationNumber);
         myForm.append("avatar",avatar);
+       // console.log(myForm);
+        dispatch(studentUpdate(myForm));
+        alert.success("Please login again to view updates");
+        dispatch(studentLogout());
+        navigate('/');
     }
 
     return(
@@ -138,22 +154,22 @@ const StudentUpdateProfile = () => {
                 <ProfileHeader>
                     Update Profile
                 </ProfileHeader>
-                <ProfileForm encType='multiform/form-data'>
+                <ProfileForm encType='multiform/form-data' onSubmit={fileHandler}>
                     <ProfileEmail>
                     <MailOutline/>
-                        <ProfileInput type="text" placeholder="Email" required name="email" value={email}/>
+                        <ProfileInput type="text" placeholder="Email" required name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     </ProfileEmail>
                     <ProfilePhone>
                         <Phone/>
-                        <ProfileInput type="text" placeholder="Student Mobile" required name="studentMobileNumber" value={mobile}/>
+                        <ProfileInput type="text" placeholder="Student Mobile" required name="studentMobileNumber" value={mobile}  onChange={(e) => setMobile(e.target.mobile)}/>
                     </ProfilePhone>
                     <ProfileName>
                         <SupervisorAccount/>
-                        <ProfileInput type="text" placeholder="Father Name" required name="fatherName" value={fatherName}/>
+                        <ProfileInput type="text" placeholder="Father Name" required name="fatherName" value={fatherName}  onChange={(e) => setFatherName(e.target.value)}/>
                     </ProfileName>
                     <ProfilePhone>
                         <PhoneIphone/>
-                        <ProfileInput type="text" placeholder="Father Mobile" required name="fatherMobileNumber" value={fatherMobile}/>
+                        <ProfileInput type="text" placeholder="Father Mobile" required name="fatherMobileNumber" value={fatherMobile}  onChange={(e) => setFatherMobile(e.target.value)}/>
                     </ProfilePhone>
                     <ProfileImage>
                     <img src={avatarPreview} alt="Avatar Preview" />

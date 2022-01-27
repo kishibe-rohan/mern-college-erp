@@ -37,7 +37,7 @@ exports.addAdmin = async (req, res, next) => {
       });
     }
 
-    const avatar = gravatar.url(email, { s: "200", r: "pg", d: "mm" });
+    const avatarUrl = gravatar.url(email, { s: "200", r: "pg", d: "mm" });
 
     let departmentHelper;
     if (department === "C.S.E") {
@@ -83,7 +83,10 @@ exports.addAdmin = async (req, res, next) => {
       joiningYear,
       registrationNumber,
       department,
-      avatar,
+      avatar: {
+        public_id: "123",
+        url: avatarUrl,
+      },
       contactNumber,
     });
 
@@ -165,7 +168,7 @@ exports.addStudent = async (req, res, next) => {
       return res.status(400).json(errors);
     }
 
-    const avatar = gravatar.url(email, { s: "200", r: "pg", d: "mm" });
+    const avatarUrl = gravatar.url(email, { s: "200", r: "pg", d: "mm" });
     let departmentHelper;
     if (department === "C.S.E") {
       departmentHelper = "01";
@@ -209,7 +212,10 @@ exports.addStudent = async (req, res, next) => {
       department,
       section,
       batch,
-      avatar,
+      avatar: {
+        public_id: "123",
+        url: avatarUrl,
+      },
       studentMobileNumber,
       fatherMobileNumber,
     });
@@ -245,7 +251,7 @@ exports.addFaculty = async (req, res, next) => {
       return res.status(400).json(errors);
     }
 
-    const avatar = gravatar.url(req.body.email, {
+    const avatarUrl = gravatar.url(req.body.email, {
       s: "200", // Size
       r: "pg", // Rating
       d: "mm", // Default
@@ -290,7 +296,10 @@ exports.addFaculty = async (req, res, next) => {
       password: hashedPassword,
       department,
       facultyMobileNumber,
-      avatar,
+      avatar: {
+        public_id: "123",
+        url: avatarUrl,
+      },
       registrationNumber,
       joiningYear,
     });
