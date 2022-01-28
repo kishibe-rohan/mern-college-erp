@@ -1,9 +1,11 @@
 import React, {useState,useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector} from 'react-redux'
+import {useAlert} from 'react-alert'
 
 import {Person,Dashboard,Ballot,VpnKey,ExitToApp,Group} from '@material-ui/icons'
 import styled from 'styled-components'
+import {facultyLogout} from '../redux/actions/facultyAction'
 
 const Container = styled.div`
  width:100vw;
@@ -54,36 +56,68 @@ a{
 
 
 const FacultyNavbar = () => {
+    const faculty = useSelector((store) => store.faculty) 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [name,setName] = useState("");
+    const alert = useAlert();
+
+    const logoutHandler = () => {
+      dispatch(facultyLogout());
+      alert.success("Logged Out");
+      navigate('/');
+    }
+
+    const home = () => {
+      navigate('/faculty')
+    }
+
+    const updateProfile = () => {
+      navigate('/faculty/update')
+    }
+
+    const updatePassword = () => {
+      navigate('/faculty/updatePassword')
+    }
+
+    const marksList = () => {
+      navigate('/faculty/marks')
+    }
+
+    const attendance = () => {
+      navigate('/faculty/attendance')
+    }
+
+
 
     return(
          <Container>
              <Wrapper>
                  <Left>
                      <Link to="/">
-                         <Logo>FACULTY</Logo>
+                         <Logo>ERP</Logo>
                      </Link>
                  </Left>
                  <Right>
-                     <MenuItem>
-                       <Person style={{color:"#0077b6"}}/>
+                 <MenuItem>
+                     {faculty && <img onClick={home} src={faculty.faculty.faculty.avatar.url} style={{height:"28px",width:"28px",borderRadius:"50%"}}/> }
                      </MenuItem>
                      <MenuItem>
-                       <Dashboard style={{color:"#0077b6"}}/>
+                       <Person onClick={updateProfile} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       <VpnKey style={{color:"#0077b6"}}/>
+                       <Dashboard onClick={home} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       <Group style={{color:"#0077b6"}}/>
+                       <VpnKey onClick={updatePassword} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       <Ballot style={{color:"#0077b6"}}/>
+                       <Group onClick={attendance} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       <ExitToApp style={{color:"#0077b6"}}/>
+                       <Ballot onClick={marksList} style={{color:"#0077b6"}}/>
+                     </MenuItem>
+                     <MenuItem>
+                       <ExitToApp onClick={logoutHandler} style={{color:"#0077b6"}}/>
                      </MenuItem>
                  </Right>
              </Wrapper>

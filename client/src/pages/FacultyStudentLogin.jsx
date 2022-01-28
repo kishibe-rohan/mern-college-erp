@@ -100,7 +100,7 @@ const FacultyStudentLogin = () => {
     const {isAuthenticated} = useSelector((state) => state.student);
     const {isAuthenticated:facultyAuthenticated} = useSelector((state) => state.faculty)
 
-    const [isStudent,setIsStudent] = useState(true);
+    
     const [facultyRegNum, setFacultyRegNum] = useState('')
     const [facultyPassword, setFacultyPassword] = useState('')
     const [studentRegNum, setStudentRegNum] = useState('')

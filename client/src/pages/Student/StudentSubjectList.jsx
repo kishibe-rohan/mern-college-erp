@@ -1,10 +1,11 @@
 import React,{useEffect} from 'react'
-import {Link} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {DataGrid} from '@material-ui/data-grid'
 import {useSelector,useDispatch} from 'react-redux'
 
 import StudentNavbar from '../../components/StudentNavbar'
 import styled from 'styled-components'
+import {getAllSubjects} from '../../redux/actions/studentAction'
 
 const Container = styled.div` 
 width:100%;
@@ -26,15 +27,25 @@ margin: 2rem;
 text-align: center;
 `
 
-const StudentSubjectList = ({history}) => {
+const StudentSubjectList = () => {
+
+    const student = useSelector((store) => store.student)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+       dispatch(getAllSubjects())
+    },[])
+
     const columns = [
         {field:"id",headerName:"Subject No.",flex:0.3},
         {field:"code",headerName:"Subject Code",flex:1},
         {field:"name",headerName:"Subject Name",flex:1},
         {field:"year",headerName:"Year",flex:0.3},
-        {field:"total",headerName:"Total Lectures",flex:0.4}
+        {field:"total",headerName:"Total Hours",flex:0.4}
     ]
 
+    /*
     const subjects = [
         {no:1,code:12345,name:"Data Structures",year:2,total:24},
         {no:2,code:12345,name:"Algorithms",year:2,total:28},
@@ -42,15 +53,16 @@ const StudentSubjectList = ({history}) => {
         {no:4,code:12345,name:"Database Management",year:2,total:36},
         {no:5,code:12345,name:"Machine Learning",year:2,total:24},
     ]
+    */
 
     const rows = [];
-    subjects.forEach((item) => {
+    student.allSubjects.forEach((item,index) => {
         rows.push({
-            id:item.no,
-            code:item.code,
-            name:item.name,
+            id:index+1,
+            code:item.subjectCode,
+            name:item.subjectName,
             year:item.year,
-            total:item.total
+            total:item.totalLectures
         })
     })
 
@@ -58,11 +70,20 @@ const StudentSubjectList = ({history}) => {
 
     return(
         <>
-        <StudentNavbar/>
+        {
+            student.isAuthenticated?
+            (
+             <>
+             <StudentNavbar/>
         <Container>
             <Header>SUBJECTS LIST</Header>
             <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
         </Container>
+             </>
+            ):(
+                navigate('/')
+            )
+        }
         </>
     )
 }

@@ -266,7 +266,7 @@ export const studentUpdate = (updatedData) => {
 export const getAllSubjects = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get("/api/student/getSubjects");
+      const { data } = await axios.get("/api/student/getAllSubjects");
       dispatch(getAllSubjectsHelper(data.result));
     } catch (err) {
       console.log("Error in getting subjects", err.message);

@@ -1,11 +1,13 @@
 import React,{useState,useEffect} from 'react'
 import { useDispatch,useSelector } from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import styled from 'styled-components'
 
 import {MailOutline,Phone} from '@material-ui/icons'
 
 import FacultyNavbar from '../../components/FacultyNavbar'
+import {facultyUpdate,facultyLogout} from '../../redux/actions/facultyAction'
 
 const Container = styled.div`
 width:100vw;
@@ -104,18 +106,27 @@ width: 100%;
   box-shadow:0 2px 5px rgba(0,0,0,0.219);
 `
 const FacultyUpdateProfile = () => {
-    const [email,setEmail] = useState("");
-    const [mobile,setMobile] = useState("");
+    const alert = useAlert();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const faculty = useSelector((store) => store.faculty)
+
+    const [email,setEmail] = useState(faculty.faculty.faculty.email);
+    const [mobile,setMobile] = useState(faculty.faculty.faculty.facultyMobileNumber);
     const [avatar,setAvatar] = useState("/Profile.png");
     const [avatarPreview,setAvatarPreview] = useState("/Profile.png");
 
     const imageHandler = (e) => {
-        if(e.target.files && e.target.files[0])
-        {
-            let img = e.target.files[0];
-            setAvatar(img);
-            setAvatarPreview(img);
-        }
+       const reader = new FileReader();
+       reader.onload = () => {
+           if(reader.readyState === 2)
+           {
+               setAvatarPreview(reader.result);
+               setAvatar(reader.result)
+           }
+       }
+
+       reader.readAsDataURL(e.target.files[0]);
     }
 
     const fileHandler = async(e) => {
@@ -124,24 +135,32 @@ const FacultyUpdateProfile = () => {
         myForm.append("facultyMobileNumber",mobile);
         myForm.append("email",email);
         myForm.append("avatar",avatar);
+        myForm.append("registrationNumber",faculty.faculty.faculty.registrationNumber);
+        dispatch(facultyUpdate(myForm));
+        alert.success("Profile Update Successful..Please Login Again");
+        dispatch(facultyLogout());
+        navigate('/');
     }
 
     return(
         <>
-        <FacultyNavbar/>
+        {
+            faculty.isAuthenticated?(
+              <>
+               <FacultyNavbar/>
         <Container>
             <ProfileBox>
                 <ProfileHeader>
                     Update Profile
                 </ProfileHeader>
-                <ProfileForm encType='multiform/form-data'>
+                <ProfileForm encType='multiform/form-data' onSubmit={fileHandler}>
                     <ProfileEmail>
                     <MailOutline/>
-                        <ProfileInput type="text" placeholder="Email" required name="email" value={email}/>
+                        <ProfileInput type="text" placeholder="Email" required name="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
                     </ProfileEmail>
                     <ProfilePhone>
                         <Phone/>
-                        <ProfileInput type="text" placeholder="Faculty Mobile" required name="facultyMobileNumber" value={mobile}/>
+                        <ProfileInput type="text" placeholder="Faculty Mobile" required name="facultyMobileNumber" value={mobile}  onChange={(e) => setMobile(e.target.value)}/>
                     </ProfilePhone>
                     <ProfileImage>
                     <img src={avatarPreview} alt="Avatar Preview" />
@@ -153,6 +172,11 @@ const FacultyUpdateProfile = () => {
                 </ProfileForm>
             </ProfileBox>
         </Container>
+              </>
+            ):(
+                navigate('/')
+            )
+        }
         </>
     )
 }

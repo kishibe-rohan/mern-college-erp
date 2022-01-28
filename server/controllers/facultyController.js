@@ -26,6 +26,7 @@ const Mark = require("../models/Marks");
 exports.facultyLogin = async (req, res, next) => {
   try {
     const { errors, isValid } = validateFacultyLoginInput(req.body);
+    //console.log(req.body);
     if (!isValid) {
       return res.status(400).json(errors);
     }
@@ -328,6 +329,7 @@ exports.updateProfile = async (req, res, next) => {
     const { email, facultyMobileNumber, registrationNumber } = req.body;
 
     const faculty = await Faculty.findOne({ registrationNumber });
+    //console.log(faculty);
 
     const { _id } = faculty;
 

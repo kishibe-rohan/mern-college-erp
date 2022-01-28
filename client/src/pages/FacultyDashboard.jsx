@@ -1,8 +1,9 @@
 import React from 'react'
+import {useSelector} from 'react-redux'
 import FacultyNavbar from '../components/FacultyNavbar'
 
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 
 const Container = styled.div`
 display:flex;
@@ -74,29 +75,32 @@ box-sizing:border-box;
 
 
 const FacultyDashboard = () => {
+    const navigate = useNavigate();
+    const faculty = useSelector((store) => store.faculty);
+
   return (
     <>
     <FacultyNavbar/>
     <Container>
       <Header>
           <h1>Faculty Profile</h1>
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuqxDTr74EAw5NYdyNkhKPo_el_Z8Iu0-yDg&usqp=CAU" />
-          <h3>John Doe</h3>
-          <h3>21810589</h3>
-          <Link to="/faculty/updateProfile">Update Profile</Link>
+          <img src={faculty.faculty.faculty.avatar.url} />
+          <h3>{faculty.faculty.faculty.name}</h3>
+          <h3>{faculty.faculty.faculty.registrationNumber}</h3>
+          <Link to="/faculty/update">Update Profile</Link>
       </Header>
       <ProfileInfo>
           <ProfileInfoItem>
               <h4>Email</h4>
-              <p>abc123@gmail.com</p>
+              <p>{faculty.faculty.faculty.email}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Designation</h4>
-              <p>Head Of Department C.S.E</p>
+              <p>{faculty.faculty.faculty.designation}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Mobile Number</h4>
-              <p>+123456789</p>
+              <p>{faculty.faculty.faculty.facultyMobileNumber}</p>
           </ProfileInfoItem>
       </ProfileInfo>
     </Container>

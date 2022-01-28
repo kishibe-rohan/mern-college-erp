@@ -1,10 +1,12 @@
 import React,{useState,useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import {useAlert} from 'react-alert'
 
 import StudentNavbar from '../../components/StudentNavbar'
 import styled from 'styled-components'
 import {VpnKey,Lock,LockOpen} from '@material-ui/icons'
+import { studentUpdatePassword,studentLogout } from '../../redux/actions/studentAction'
 
 
 const Container = styled.div`
@@ -79,43 +81,73 @@ width: 100%;
 `
 
 const StudentUpdatePassword = () => {
+    const student = useSelector((store) => store.student)
+    const store = useSelector((store) => store);
+    const navigate = useNavigate('/');
+    const dispatch = useDispatch();
+    const alert = useAlert();
+
     const [oldPassword,setOldPassword] = useState("");
     const [newPassword,setNewPassword] = useState("");
-    const [confirmPassword,setConfirmPassword] = useState("");
+    const [confirmNewPassword,setConfirmNewPassword] = useState("");
+    const [error, setError] = useState({})
+
+    useEffect(() => {
+        if(store.errorHelper)
+        {
+            errorHandler();
+        }
+    },[store.errorHelper])
     
 
     const formHandler = async(e) => {
         e.preventDefault();
+        dispatch(studentUpdatePassword({oldPassword,newPassword,confirmNewPassword,registrationNumber:student.student.student.registrationNumber}))
+        alert.success("Password Updated Successfully..Please Login Again");
+        dispatch(studentLogout());
+    }
+
+    const errorHandler = () => {
+        setError(store.errorHelper);
+        alert.error("Error updating password")
     }
 
     return(
         <>
-        <StudentNavbar/>
-        <Container>
-            <ProfileBox>
-                <ProfileHeader>
-                    Update Password
-                </ProfileHeader>
-                <ProfileForm encType='multiform/form-data'>
-                    <ProfilePass>
-                        <VpnKey/>
-                        <ProfileInput type="password" placeholder="Old Password" required name="oldPassword" value={oldPassword}/>
-                    </ProfilePass>
-                    <ProfilePass>
-                        <Lock/>
-                        <ProfileInput type="password" placeholder="New Password" required name="newPassword" value={newPassword}/>
-                    </ProfilePass>
-                    <ProfilePass>
-                        <LockOpen/>
-                        <ProfileInput type="password" placeholder="Confirm Password" required name="confirmPassword" value={confirmPassword}/>
-                    </ProfilePass>
-                    <ProfileButton type="submit">
-                        Update Password
-                    </ProfileButton>
-                </ProfileForm>
-            </ProfileBox>
-        </Container>
-        </>
+        {
+            student.isAuthenticated?(
+                <>
+                <StudentNavbar/>
+                <Container>
+                    <ProfileBox>
+                        <ProfileHeader>
+                            Update Password
+                        </ProfileHeader>
+                        <ProfileForm encType='multiform/form-data' onSubmit={formHandler}>
+                            <ProfilePass>
+                                <VpnKey/>
+                                <ProfileInput type="password" placeholder="Old Password" onChange={(e) => setOldPassword(e.target.value)} required name="oldPassword" value={oldPassword}/>
+                            </ProfilePass>
+                            <ProfilePass>
+                                <Lock/>
+                                <ProfileInput type="password" placeholder="New Password" onChange={(e) => setNewPassword(e.target.value)} required name="newPassword" value={newPassword}/>
+                            </ProfilePass>
+                            <ProfilePass>
+                                <LockOpen/>
+                                <ProfileInput type="password" placeholder="Confirm Password" onChange={(e) => setConfirmNewPassword(e.target.value)} required name="confirmNewPassword" value={confirmNewPassword}/>
+                            </ProfilePass>
+                            <ProfileButton type="submit">
+                                Update Password
+                            </ProfileButton>
+                        </ProfileForm>
+                    </ProfileBox>
+                </Container>
+                </>
+            ):(
+                navigate("/")
+            )
+        }
+     </>  
     )
 }
 

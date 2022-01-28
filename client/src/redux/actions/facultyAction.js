@@ -125,7 +125,7 @@ const facultyUpdateProfileFlag = (data) => {
 export const facultyUpdate = (updatedData) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.post(
+      const { data } = await axios.put(
         "/api/faculty/updateProfile",
         updatedData
       );
