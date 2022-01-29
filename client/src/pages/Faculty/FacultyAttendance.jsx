@@ -6,6 +6,9 @@ import styled from 'styled-components'
 import FacultyNavbar from '../../components/FacultyNavbar'
 
 import {Person,CalendarToday,Search,Class} from '@material-ui/icons'
+import {fetchStudents,markAttendance} from '../../redux/actions/facultyAction'
+import { useNavigate } from 'react-router-dom'
+import {useAlert} from 'react-alert'
 
 const Container = styled.div` 
 width:100%;
@@ -87,26 +90,72 @@ const Button = styled.button`
     cursor:pointer;
 `
 
+const SubmitContainer = styled.div`
+display:flex;
+align-itmes:center;
+justify-content:center;
+`
+
 
 const FacultyAttendance = () => {
+    const store = useSelector((store) => store);
+    const faculty = useSelector((store) => store.faculty);
+    const navigate = useNavigate();
+    const alert = useAlert();
+    const dispatch = useDispatch();
+
+    const department = faculty.faculty.faculty.department;
+    const [year, setYear] = useState("")
+    const [section, setSection] = useState("")
+    const [subjectCode, setSubjectCode] = useState("")
+    const [checkedValue, setCheckedValue] = useState([]);
+    const [students,setStudents] = useState([]);
+    const [error, setError] = useState({})
+    const [flag, setFlag] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading2, setIsLoading2] = useState(false)
 
     const columns = [
-        {field:"id",headerName:"No.",flex:0.1},
-        {field:"code",headerName:"Registration Number",flex:0.3},
+        {field:"_id",headerName:"No.",flex:0.3},
+        {field:"code",headerName:"Registration Number",flex:0.1},
         {field:"name",headerName:"Name",flex:0.5},
         {field:"email",headerName:"Email",flex:0.3},
-        {field:"year",headerName:"Attendance",flex:0.1,type:"number",sortable:false,
-    renderCell:(params) => {
-        return(
-            <>
-            <input type="checkbox">
-
-            </input>
-            </>
-        )
-    }},
     ]
 
+    const rows = [];
+    faculty.fetchedStudents.forEach((item,index) => {
+        rows.push({
+            id:index + 1,
+            _id:item._id,
+            code:item.registrationNumber,
+            name:item.name,
+            email:item.email
+        })
+    })
+
+    useEffect(() => {
+        if (store.error) {
+            setError(store.error)
+        }
+    }, [store.error])
+
+
+    const getStudents = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        dispatch(fetchStudents(department,year,section))
+    }
+
+    const setAttendance = (e) => {
+        e.preventDefault();
+        console.log(checkedValue);
+        dispatch(markAttendance(checkedValue,subjectCode,department,year,section))
+        setCheckedValue([])
+        alert.success("Attendance Marked!")
+    }
+
+
+    /*
     const subjects = [
         {no:1,code:12345,name:"Shifon Shaikh",email:"abc123@gmail.com",},
         {no:2,code:12345,name:"Rahul Yadav",email:"abc123@gmail.com",},
@@ -114,16 +163,7 @@ const FacultyAttendance = () => {
         {no:4,code:12345,name:"Rakesh Mali",email:"abc123@gmail.com",},
         {no:5,code:12345,name:"Raj Aryan",email:"abc123@gmail.com",},
     ]
-
-    const rows = [];
-    subjects.forEach((item) => {
-        rows.push({
-            id:item.no,
-            code:item.code,
-            name:item.name,
-            email:item.email
-        })
-    })
+    */
 
 
   return (
@@ -134,45 +174,81 @@ const FacultyAttendance = () => {
             <Heading>Mark Attendance</Heading>
             <FormItemContainer>
             <FormItem>
-                <Class/>
-                <select>
-                    <option>Data Structures</option>
-                    <option>Algorithms</option>
-                    <option>Operating Systems</option>
-                    <option>Databases</option>
-                </select>
-            </FormItem>
-            <FormItem>
             <CalendarToday/>
-                <select>
+                <select required onChange={(e) => setYear(e.target.value)}>
+                    <option>Year</option>
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
                     <option>4</option>
                 </select>
             </FormItem>
-
-            </FormItemContainer>
-            <FormItemContainer>
             <FormItem>
                 <Person/>
-                <select>
+                <select required onChange={(e) => setSection(e.target.value)}>
+                    <option>Section</option>
                     <option>A</option>
                     <option>B</option>
                     <option>C</option>
                     <option>D</option>
                 </select>
             </FormItem>
-            <FormItem>
-               
-            </FormItem>
-           
+
             </FormItemContainer>
-            <Button type="submit">
+            <FormItemContainer>
+        
+            {
+                !isLoading &&  <Button type="submit" onClick={getStudents}>
                 Search
             </Button>
+            }
+            </FormItemContainer>
+
+          <FormItemContainer>
+            
+            
+                
+                {
+                    faculty.allSubjectCodeList.length > 0 && (
+                        <FormItem>
+                        <Class/>
+                        <select required onChange={(e) => setSubjectCode(e.target.value)}>
+                        <option>Subject</option>
+                        {
+                            faculty.allSubjectCodeList.map(subjectCodeName => 
+                                <option>{subjectCodeName}</option>
+                            )
+                        }
+                        </select>
+                        </FormItem>
+                    ) 
+                }
+            
+            
+          </FormItemContainer>
+           
+           
         </Form>
-        <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+        <DataGrid checkboxSelection onSelectionModelChange = {(ids) => {
+            // setIsLoading2(true);
+             setCheckedValue([]);
+             const selectedRows = new Set(ids);
+             const selectedStudents = rows.filter((row) => selectedRows.has(row.id) )
+            // console.log(selectedStudents);
+             const checkedArr = [];
+             selectedStudents.forEach((item,index) => {
+                 checkedArr.push(item._id);
+             })
+             setCheckedValue(checkedArr);
+             //console.log(checkedValue);
+        }} rows={rows} columns={columns} pageSize={5} autoHeight/>
+        <SubmitContainer>
+           <Button type="submit" onClick={setAttendance}>
+                Submit
+            </Button>
+        </SubmitContainer>
+        
+           
     </Container>
     </>
   )

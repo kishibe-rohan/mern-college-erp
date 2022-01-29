@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector} from 'react-redux'
+import {useAlert} from 'react-alert'
 
 import {Person,Dashboard,Ballot,VpnKey,ExitToApp,Group,ChatBubble,Chat} from '@material-ui/icons'
 import styled from 'styled-components'
@@ -59,6 +60,7 @@ const StudentNavbar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [name,setName] = useState("");
+    const alert = useAlert();
   
     const student = useSelector((store) => store.student)
     

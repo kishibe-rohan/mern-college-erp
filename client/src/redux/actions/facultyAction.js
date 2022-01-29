@@ -104,7 +104,7 @@ export const fetchStudents = (department, year, section) => {
         year,
         section,
       });
-      dispatch(fetchStudentsHelper(data.helper));
+      dispatch(fetchStudentsHelper(data.result));
       dispatch(subjectCodeListHelper(data.subjectCode));
     } catch (err) {
       dispatch({
@@ -152,13 +152,13 @@ export const markAttendance = (
         year,
         section,
       });
-      alert("Attendance has been marked successfully");
+      //alert("Attendance has been marked successfully");
       dispatch({
         type: "HELPER",
         payload: true,
       });
     } catch (err) {
-      alert.error("Error in marking attendance");
+      console.log(err);
     }
   };
 };

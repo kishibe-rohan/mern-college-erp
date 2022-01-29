@@ -43,7 +43,6 @@ const StudentAttendance = () => {
         {field:"code",headerName:"Subject Code",flex:0.5},
         {field:"name",headerName:"Subject Name",flex:0.5},
         {field:"max",headerName:"Max Hours",flex:0.3},
-        {field:"present",headerName:"Present Hours",flex:0.3},
         {field:"absent",headerName:"Absent Hours",flex:0.3},
         {field:"total",headerName:"Total Hours",flex:0.4},
         {field:"attendance",headerName:"Attendance",flex:0.4},
@@ -60,15 +59,14 @@ const StudentAttendance = () => {
     */
 
     const rows = [];
-    student.attendance.forEach((item,index) => {
+    student.attendence.forEach((item,index) => {
         rows.push({
             id:index+1,
             code:item.subjectCode,
             name:item.subjectName,
             max:item.maxHours,
-            present:item.lecturesAttended,
             absent:item.absentHours,
-            total:item.totalLecturesByFaculty,
+            total:item.totalLectures,
             attendance:`${item.attendance}%`,
         })
     })

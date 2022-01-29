@@ -54,6 +54,7 @@ exports.studentLogin = async (req, res, next) => {
 
 exports.checkAttendance = async (req, res, next) => {
   try {
+    // console.log(req.user);
     const studentId = req.user._id;
     const attendance = await Attendance.find({ student: studentId }).populate(
       "subject"
@@ -72,7 +73,7 @@ exports.checkAttendance = async (req, res, next) => {
         res.subjectCode = att.subject.subjectCode;
         res.subjectName = att.subject.subjectName;
         res.maxHours = att.subject.totalLectures;
-        res.absentHours = att.localLectures - att.lecturesAttended;
+        res.absentHours = att.totalLectures - att.lecturesAttended;
         res.totalLectures = att.totalLectures;
         return res;
       }),

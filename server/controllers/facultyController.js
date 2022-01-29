@@ -92,6 +92,7 @@ exports.fetchStudents = async (req, res, next) => {
           _id: student._id,
           registrationNumber: student.registrationNumber,
           name: student.name,
+          email: student.email,
         };
 
         return student;
@@ -109,6 +110,8 @@ exports.markAttendance = async (req, res, next) => {
   try {
     const { selectedStudents, subjectCode, department, year, section } =
       req.body;
+
+    console.log(req.body);
     const sub = await Subject.findOne({ subjectCode });
 
     const allStudents = await Student.find({ department, year, section });
@@ -121,7 +124,7 @@ exports.markAttendance = async (req, res, next) => {
     //Mark attendance
     for (let i = 0; i < filteredArr.length; i++) {
       //get previous attendance record
-      const prev = await Attendance.findOnr({
+      const prev = await Attendance.findOne({
         student: filteredArr[i]._id,
         subject: sub._id,
       });
