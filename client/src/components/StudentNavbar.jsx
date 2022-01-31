@@ -103,7 +103,7 @@ const StudentNavbar = () => {
     }
 
     const marksList = () => {
-      navigate('/student/performace')
+      navigate('/student/performance')
     }
 
     const attendance = () => {

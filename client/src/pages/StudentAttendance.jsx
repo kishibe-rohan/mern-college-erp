@@ -36,7 +36,7 @@ const StudentAttendance = () => {
 
     useEffect(() => {
         dispatch(fetchAttendance())
-    },[])
+    },[dispatch])
 
     const columns = [
         {field:"id",headerName:"Subject No.",flex:0.3},
@@ -59,7 +59,7 @@ const StudentAttendance = () => {
     */
 
     const rows = [];
-    student.attendence.forEach((item,index) => {
+    student?.attendence?.forEach((item,index) => {
         rows.push({
             id:index+1,
             code:item.subjectCode,

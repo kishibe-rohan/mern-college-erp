@@ -306,11 +306,11 @@ exports.getAllMarks = async (req, res, next) => {
     );
 
     const UnitTest1 = getMarks.filter((obj) => {
-      return obj.exam === "UnitTest1";
+      return obj.exam === "Unit Test 1";
     });
 
     const UnitTest2 = getMarks.filter((obj) => {
-      return obj.exam === "UnitTest2";
+      return obj.exam === "Unit Test 2";
     });
 
     const Semester = getMarks.filter((obj) => {

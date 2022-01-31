@@ -183,7 +183,7 @@ export const uploadMarks = (
         year,
         section,
       });
-      alert("Marks uploaded successfully");
+      // alert("Marks uploaded successfully");
       dispatch({
         type: "HELPER",
         payload: true,

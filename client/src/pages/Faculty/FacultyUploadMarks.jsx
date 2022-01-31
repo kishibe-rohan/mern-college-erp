@@ -1,11 +1,14 @@
 import React,{useState,useEffect} from 'react'
 import {useSelector,useDispatch} from 'react-redux'
 import {DataGrid} from '@material-ui/data-grid'
+import {useNavigate} from 'react-router-dom'
 
 import styled from 'styled-components'
 import FacultyNavbar from '../../components/FacultyNavbar'
+import {fetchStudents,uploadMarks} from '../../redux/actions/facultyAction'
 
 import {Person,CalendarToday,Search,Class} from '@material-ui/icons'
+import {useAlert} from 'react-alert'
 
 const Container = styled.div` 
 width:100%;
@@ -89,6 +92,21 @@ const Button = styled.button`
 
 
 const FacultyUploadMarks = () => {
+    const alert = useAlert();
+
+    const handleInputChange = (value,_id) => {
+        const newMarks = [...marks];
+        let index = newMarks.findIndex(m => m._id === _id);
+        if(index === -1)
+        {
+            newMarks.push({_id,value})
+        }else{
+            newMarks[index].value = value;
+        }
+ 
+        setMarks(newMarks);
+ 
+     }
 
     const columns = [
         {field:"id",headerName:"No.",flex:0.2},
@@ -96,14 +114,16 @@ const FacultyUploadMarks = () => {
         {field:"name",headerName:"Name",flex:0.5},
         {field:"year",headerName:"Marks",flex:0.3,type:"number",sortable:false,
         renderCell:(params) => {
+           // console.log(params);
             return(
                 <>
-                <input type="text" style={{outline:"none",border:"none"}} placeholder="Enter marks"/>
+                <input required onChange={(e) => handleInputChange(e.target.value,params.getValue(params.id,"id"))} type="number" style={{outline:"none",border:"none"}} placeholder="Enter marks"/>
                 </>
             )
         }},
     ]
 
+    /*
     const subjects = [
         {no:1,code:12345,name:"Shifon Shaikh",email:"abc123@gmail.com",marks:""},
         {no:2,code:12345,name:"Rahul Yadav",email:"abc123@gmail.com",marks:""},
@@ -111,14 +131,60 @@ const FacultyUploadMarks = () => {
         {no:4,code:12345,name:"Rakesh Mali",email:"abc123@gmail.com",marks:""},
         {no:5,code:12345,name:"Raj Aryan",email:"abc123@gmail.com",marks:""},
     ]
+   */
+
+    const store = useSelector((store) => store)
+    const faculty = useSelector((store) => store.faculty);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const [department, setDepartment] = useState("")
+    const [year, setYear] = useState("")
+    const [marks, setMarks] = useState([])
+    const [section, setSection] = useState("")
+    const [subjectCode, setSubjectCode] = useState("")
+    const [totalMarks, setTotalMarks] = useState()
+    const [exam ,setExam] = useState("")
+    const [error, setError] = useState({})
+    const [errorHelper, setErrorHelper] = useState({})
+    const [isFetchingStudents,setIsFetchingStudents] = useState(true);
+
+    useEffect(() => {
+        if (store.error) {
+            setError(store.error)
+        }
+    }, [store.error])
+
+    useEffect(() => {
+        if (store.errorHelper) {
+            setErrorHelper(store.errorHelper)
+        }
+    }, [store.errorHelper])
+
+
+    const formHandler = (e) => {
+        e.preventDefault();
+        //console.log(year,section);
+       dispatch(fetchStudents(department, year,  section));
+       setIsFetchingStudents(prev => !prev);
+    }
+
+
+
+    const secondFormHandler = (e) => {
+        e.preventDefault();
+       // console.log(subjectCode, exam, totalMarks, marks, department, section);
+        dispatch(uploadMarks(subjectCode, exam, totalMarks, marks, department, section
+        ));
+        alert.success("Marks uploaded successfully");
+    }
 
     const rows = [];
-    subjects.forEach((item) => {
+    faculty.fetchedStudents.forEach((item) => {
         rows.push({
-            id:item.no,
-            code:item.code,
+            id:item._id,
+            code:item.registrationNumber,
             name:item.name,
-            total:item.marks
         })
     })
 
@@ -127,55 +193,88 @@ const FacultyUploadMarks = () => {
     <>
     <FacultyNavbar/>
     <Container>
-        <Form>
-            <Heading>Upload Marks</Heading>
-            <FormItemContainer>
-            <FormItem>
-                <Class/>
-                <select>
-                    <option>A</option>
-                    <option>B</option>
-                    <option>C</option>
-                    <option>D</option>
-                </select>
-            </FormItem>
-            <FormItem>
-                <Class/>
-                <select>
-                    <option>Unit Test 1</option>
-                    <option>Unit Test 2</option>
-                    <option>Semester</option>
-                </select>
-            </FormItem>
-
-            </FormItemContainer>
-            <FormItemContainer>
-            <FormItem>
-                <Person/>
-                <select>
-                    <option>C.S.E</option>
-                    <option>E.C.E</option>
-                    <option>I.T</option>
-                    <option>Civil</option>
-                    <option>Mechanical</option>
-                </select>
-            </FormItem>
-            <FormItem>
-                <CalendarToday/>
-                <select>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                </select>
-            </FormItem>
-           
-            </FormItemContainer>
-            <Button type="submit">
-                Search
-            </Button>
-        </Form>
-        <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+    <Form>
+    <Heading>Upload Marks</Heading>
+   
+        {
+            isFetchingStudents?(
+                <>
+                <FormItemContainer>
+                <FormItem>
+                    <Class/>
+                    <select required onChange={(e) => setSection(e.target.value)}>
+                        <option>Section</option>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>D</option>
+                    </select>
+                </FormItem>
+                <FormItem>
+                    <Class/>
+                    <select onChange={(e) => setExam(e.target.value)}>
+                        <option>Exam</option>
+                        <option>Unit Test 1</option>
+                        <option>Unit Test 2</option>
+                        <option>Semester</option>
+                    </select>
+                </FormItem>
+    
+                </FormItemContainer>
+                <FormItemContainer>
+                <FormItem>
+                    <Person/>
+                    <select required onChange={(e) => setDepartment(e.target.value)}>
+                        <option>Department</option>
+                        <option>C.S.E</option>
+                        <option>E.C.E</option>
+                        <option>I.T</option>
+                        <option>Civil</option>
+                        <option>Mechanical</option>
+                    </select>
+                </FormItem>
+                <FormItem>
+                    <CalendarToday/>
+                    <select  required onChange={(e) => setYear(e.target.value)}>
+                        <option>Year</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                </FormItem>
+                </FormItemContainer>
+                
+                <Button type="submit" onClick={formHandler}>
+                   Search Students
+                 </Button>
+                </>
+            ):( <>
+                <FormItemContainer>
+        <FormItem>
+          <Search/>
+          <select required onChange={(e) => setSubjectCode(e.target.value)}>
+                        <option>Subject</option>
+                        {
+                            faculty.allSubjectCodeList.map(subjectCodeName => 
+                                <option>{subjectCodeName}</option>
+                            )
+                        }
+                        </select>
+        </FormItem>
+        <FormItem>
+                  <Class/>
+                  <input type="number" placeholder="Enter total marks" required onChange={(e) => setTotalMarks(e.target.value)}/>
+        </FormItem>
+       </FormItemContainer>
+                <Button type="submit" onClick={secondFormHandler}>
+                   Submit Marks
+                 </Button>
+       </>
+            )
+        }
+     </Form>
+        <DataGrid rows={rows} columns={columns} pageSize={5} autoHeight/>
     </Container>
     </>
   )

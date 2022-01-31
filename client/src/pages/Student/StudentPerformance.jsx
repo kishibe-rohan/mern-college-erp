@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom'
 import {DataGrid} from '@material-ui/data-grid'
 import {useSelector,useDispatch} from 'react-redux'
 
+import {getMarks} from '../../redux/actions/studentAction'
+
 import StudentNavbar from '../../components/StudentNavbar'
 import styled from 'styled-components'
 
@@ -27,6 +29,13 @@ text-align: center;
 `
 
 const StudentPerformance = () => {
+    const dispatch = useDispatch();
+    const student = useSelector((store) => store.student);
+
+    useEffect(() => {
+        dispatch(getMarks());
+    },[dispatch])
+
     const columns = [
         {field:"id",headerName:"Subject No.",flex:0.3},
         {field:"code",headerName:"Subject Code",flex:1},
@@ -35,6 +44,7 @@ const StudentPerformance = () => {
         {field:"totalMarks",headerName:"Total Marks",flex:0.4}
     ]
 
+    /*
     const subjects = [
         {no:1,code:12345,name:"Data Structures",marks:20,total:25},
         {no:2,code:12345,name:"Algorithms",marks:25,total:30},
@@ -42,15 +52,39 @@ const StudentPerformance = () => {
         {no:4,code:12345,name:"Database Management",marks:25,total:30},
         {no:5,code:12345,name:"Machine Learning",marks:20,total:25},
     ]
+    */
 
-    const rows = [];
-    subjects.forEach((item) => {
-        rows.push({
-            id:item.no,
-            code:item.code,
-            name:item.name,
-            marks:item.year,
-            totalMarks:item.total
+    const rows1 = [];
+    const rows2 = [];
+    const rows3 = [];
+
+    student?.allMarks?.UnitTest1?.forEach((item,index) => {
+        rows1.push({
+            id:index + 1,
+            code:item.subject.subjectCode,
+            name:item.subject.subjectName,
+            marks:item.marks,
+            totalMarks:item.totalMarks
+        })
+    })
+
+    student?.allMarks?.UnitTest2?.forEach((item,index) => {
+        rows2.push({
+            id:index + 1,
+            code:item.subject.subjectCode,
+            name:item.subject.subjectName,
+            marks:item.marks,
+            totalMarks:item.totalMarks
+        })
+    })
+
+    student?.allMarks?.Semester?.forEach((item,index) => {
+        rows3.push({
+            id:index + 1,
+            code:item.subject.subjectCode,
+            name:item.subject.subjectName,
+            marks:item.marks,
+            totalMarks:item.totalMarks
         })
     })
 
@@ -60,11 +94,11 @@ const StudentPerformance = () => {
         <StudentNavbar/>
         <Container>
             <Header>UNIT TEST 1</Header>
-            <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+            <DataGrid rows={rows1} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
             <Header>UNIT TEST 2</Header>
-            <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+            <DataGrid rows={rows2} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
             <Header>SEMESTER</Header>
-            <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+            <DataGrid rows={rows3} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
         </Container>
         </>
     )
