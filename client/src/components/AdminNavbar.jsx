@@ -2,8 +2,10 @@ import React, {useState,useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector} from 'react-redux'
 
-import {Person,Dashboard,Ballot,VpnKey,ExitToApp,Group} from '@material-ui/icons'
+import {PersonAdd,LibraryAdd, HowToReg,Person,ExitToApp,Group,LibraryBooks} from '@material-ui/icons'
 import styled from 'styled-components'
+
+import {adminLogout} from '../redux/actions/adminAction'
 
 const Container = styled.div`
  width:100vw;
@@ -58,31 +60,71 @@ const AdminNavbar = () => {
     const dispatch = useDispatch();
     const [name,setName] = useState("");
 
+    const logoutHandler = () => {
+      dispatch(adminLogout());
+      alert.success("Logged Out");
+      navigate('/admin/login');
+    }
+
+    const home = () => {
+      navigate('/admin')
+    }
+
+    const AddStudent = () => {
+      navigate('/admin/add/students')
+    }
+
+    const AddFaculty = () => {
+      navigate('/admin/add/faculties')
+    }
+
+    const AddSubject = () => {
+      navigate('/admin/add/subjects')
+    }
+
+    const GetStudent = () => {
+      navigate('/admin/students')
+    }
+
+    const GetFaculty = () => {
+      navigate('/admin/faculties')
+    }
+
+    const GetSubject = () => {
+      navigate('/admin/subjects')
+    }
+
+    
+
+
     return(
          <Container>
              <Wrapper>
                  <Left>
                      <Link to="/">
-                         <Logo>ADMIN</Logo>
+                         <Logo>ERP</Logo>
                      </Link>
                  </Left>
                  <Right>
-                     <MenuItem>
+                     <MenuItem onClick={AddStudent}>
+                       <PersonAdd style={{color:"#0077b6"}}/>
+                     </MenuItem>
+                     <MenuItem onClick={AddFaculty}>
+                       <HowToReg style={{color:"#0077b6"}}/>
+                     </MenuItem>
+                     <MenuItem onClick={AddSubject}>
+                       <LibraryAdd style={{color:"#0077b6"}}/>
+                     </MenuItem>
+                     <MenuItem onClick={GetStudent}>
                        <Person style={{color:"#0077b6"}}/>
                      </MenuItem>
-                     <MenuItem>
-                       <Dashboard style={{color:"#0077b6"}}/>
-                     </MenuItem>
-                     <MenuItem>
-                       <VpnKey style={{color:"#0077b6"}}/>
-                     </MenuItem>
-                     <MenuItem>
+                     <MenuItem onClick={GetFaculty}>
                        <Group style={{color:"#0077b6"}}/>
                      </MenuItem>
-                     <MenuItem>
-                       <Ballot style={{color:"#0077b6"}}/>
+                     <MenuItem onClick={GetSubject}>
+                       <LibraryBooks style={{color:"#0077b6"}}/>
                      </MenuItem>
-                     <MenuItem>
+                     <MenuItem onClick={logoutHandler}>
                        <ExitToApp style={{color:"#0077b6"}}/>
                      </MenuItem>
                  </Right>

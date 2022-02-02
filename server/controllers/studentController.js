@@ -243,6 +243,8 @@ exports.postPrivateChat = async (req, res, next) => {
       registrationNumber: receiverRegistrationNumber,
     });
 
+    //console.log(receiverStudent);
+
     const newMessage = await new Message({
       senderName,
       senderId,
@@ -256,6 +258,7 @@ exports.postPrivateChat = async (req, res, next) => {
     });
 
     await newMessage.save();
+    res.status(200).json("Message sent successfully");
   } catch (err) {
     console.log("Error is sending private chat", err.message);
   }

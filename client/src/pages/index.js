@@ -21,3 +21,5 @@ export { default as AdminAddSubject } from "./Admin/AdminAddSubject";
 export { default as StudentSearch } from "./Student/StudentSearch";
 export { default as ForgotPassword } from "./ForgotPassword";
 export { default as Chat } from "./Chat";
+export { default as AdminLogin } from "./AdminLogin";
+export { default as StudentChats } from "./Student/StudentChats";

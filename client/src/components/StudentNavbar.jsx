@@ -111,7 +111,7 @@ const StudentNavbar = () => {
     }
 
     const chatList = () => {
-      navigate('/student/search')
+      navigate('/student/chatList')
     }
 
     return(

@@ -15,6 +15,7 @@ import { setStudentUser, studentLogout } from "./redux/actions/studentAction";
 
 import {
   FacultyStudentLogin,
+  AdminLogin,
   AdminDashboard,
   AdminGetFaculty,
   AdminGetStudents,
@@ -37,6 +38,7 @@ import {
   FacultyUpdatePassword,
   ForgotPassword,
   Chat,
+  StudentChats,
 } from "./pages";
 
 //Handle JWT Token
@@ -82,6 +84,7 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<FacultyStudentLogin />} />
+          <Route exact path="/admin/login" element={<AdminLogin />} />
           <Route exact path="/faculty" element={<FacultyDashboard />} />
           <Route exact path="/home" element={<StudentDashboard />} />
           <Route exact path="/admin" element={<AdminDashboard />} />
@@ -119,6 +122,7 @@ function App() {
             element={<StudentAttendance />}
           />
           <Route exact path="/student/search" element={<StudentSearch />} />
+          <Route exact path="/student/chatList" element={<StudentChats />} />
           <Route
             exact
             path="/profile/:registrationNumber"

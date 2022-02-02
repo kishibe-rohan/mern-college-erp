@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import {useAlert} from 'react-alert'
 
-import StudentNavbar from '../../components/StudentNavbar'
+import AdminNavbar from '../../components/AdminNavbar'
 import styled from 'styled-components'
 
 import {Face,MailOutline,Class,Phone,PhoneIphone,SupervisorAccount,CalendarToday,} from '@material-ui/icons'
+import {adminAddStudent} from '../../redux/actions/adminAction'
 
 const Container = styled.div`
 width:100vw;
@@ -117,41 +119,67 @@ width: 100%;
 `
 
 const AdminAddStudent = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const alert = useAlert();
+
     const [name,setName] = useState("");
     const [email,setEmail] = useState("");
     const [department,setDepartment] = useState("");
     const [year,setYear] = useState("");
     const [section,setSection] = useState("");
-    const [studentMobileNumber, setMobileNumber] = useState('')
+    const [studentMobileNumber, setStudentMobileNumber] = useState('')
     const [fatherName, setFatherName] = useState('')
     const [fatherMobileNumber, setFatherMobileNumber] = useState('')
     const [error, setError] = useState({})
-    const [avatarPreview,setAvatarPreview] = useState("./Profile.png")
+
+    const formHandler = (e) => {
+        e.preventDefault();
+        /*
+        const myForm = new FormData();
+        myForm.append("name",name);
+        myForm.append("year",year);
+        myForm.append("section",section);
+        myForm.append("department",department);
+        myForm.append("studentMobileNumber",studentMobileNumber);
+        myForm.append("email",email);
+        myForm.append("fatherName",fatherName);
+        myForm.append("fatherMobileNumber",fatherMobileNumber);        
+        myForm.append("avatar",avatar);
+        console.log(myForm);
+        */
+        
+
+        dispatch(adminAddStudent(name,year,section,department,studentMobileNumber,email,fatherName,fatherMobileNumber));
+        alert.success("Student Registration Successful");
+        navigate('/admin/students');
+    }
 
     return(
            <>
-           <StudentNavbar/>
+           <AdminNavbar/>
            <Container>
             <ProfileBox>
                 <ProfileHeader>
                     Add Student
                 </ProfileHeader>
-                <ProfileForm encType='multiform/form-data'>
+                <ProfileForm encType='multiform/form-data' onSubmit={formHandler}>
                    <ProfileName>
                         <Face/>
-                        <ProfileInput type="text" placeholder="Name" required name="fatherName" value={fatherName}/>
+                        <ProfileInput type="text" onChange = {(e) => setName(e.target.value)} placeholder="Name" required name="name" value={name}/>
                     </ProfileName>
                     <ProfileEmail>
                     <MailOutline/>
-                        <ProfileInput type="text" placeholder="Email" required name="email" value={email}/>
+                        <ProfileInput type="text" onChange = {(e) => setEmail(e.target.value)} placeholder="Email" required name="email" value={email}/>
                     </ProfileEmail>
                     <ProfilePhone>
                         <Phone/>
-                        <ProfileInput type="text" placeholder="Student Mobile" required name="studentMobileNumber" value={studentMobileNumber}/>
+                        <ProfileInput type="text" onChange = {(e) => setStudentMobileNumber(e.target.value)} placeholder="Student Mobile" required name="studentMobileNumber" value={studentMobileNumber}/>
                     </ProfilePhone>
                     <ProfileName>
                         <Class/>
-                        <select>
+                        <select onChange = {(e) => setDepartment(e.target.value)}>
+                            <option>Department</option>
                             <option>C.S.E</option>
                             <option>I.T</option>
                             <option>Mechanical</option>
@@ -160,19 +188,36 @@ const AdminAddStudent = () => {
                         </select>
                     </ProfileName>
                     <ProfileName>
+                        <Class/>
+                        <select onChange = {(e) => setSection(e.target.value)}>
+                            <option>Section</option>
+                            <option>A</option>
+                            <option>B</option>
+                            <option>C</option>
+                            <option>D</option>
+                        </select>
+                    </ProfileName>
+                    <ProfileName>
+                        <CalendarToday/>
+                        <select onChange = {(e) => setYear(e.target.value)}>
+                            <option>Year</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                        </select>
+                    </ProfileName>
+                    <ProfileName>
                         <SupervisorAccount/>
-                        <ProfileInput type="text" placeholder="Father Name" required name="fatherName" value={fatherName}/>
+                        <ProfileInput onChange = {(e) => setFatherName(e.target.value)} type="text" placeholder="Father Name" required name="fatherName" value={fatherName}/>
                     </ProfileName>
                     <ProfilePhone>
                         <PhoneIphone/>
-                        <ProfileInput type="text" placeholder="Father Mobile" required name="fatherMobileNumber" value={fatherMobileNumber}/>
+                        <ProfileInput onChange = {(e) => setFatherMobileNumber(e.target.value)} type="text" placeholder="Father Mobile" required name="fatherMobileNumber" value={fatherMobileNumber}/>
                     </ProfilePhone>
-                    <ProfileImage>
-                    <img src={avatarPreview} alt="Avatar Preview" />
-                    <input type="file" name="avatar" accept="image/*" /> 
-                    </ProfileImage>
+                
                     <ProfileButton type="submit">
-                        Update Profile
+                        Register 
                     </ProfileButton>
                 </ProfileForm>
             </ProfileBox>

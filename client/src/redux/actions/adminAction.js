@@ -3,8 +3,6 @@ import authToken from "../utils/authToken";
 import jwt_decode from "jwt-decode";
 import { SET_ADMIN, SET_ERRORS, GET_SUBJECTS } from "../actionTypes";
 
-
-
 const setAdmin = (data) => {
   return {
     type: SET_ADMIN,
@@ -188,10 +186,7 @@ export const adminGetAllFaculty = (department) => {
 export const adminGetAllStudent = (credentials) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.post(
-        "/api/admin/getAllStudent",
-        credentials
-      );
+      const { data } = await axios.post("/api/admin/getStudents", credentials);
       dispatch(adminGetAllStudentHelper(data.result));
     } catch (err) {
       dispatch({

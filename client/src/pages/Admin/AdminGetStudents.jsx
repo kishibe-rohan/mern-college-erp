@@ -1,11 +1,15 @@
 import React,{useState,useEffect} from 'react'
 import {useSelector,useDispatch} from 'react-redux'
 import {DataGrid} from '@material-ui/data-grid'
+import {useNavigate} from 'react-router-dom'
 
 import styled from 'styled-components'
 import AdminNavbar from '../../components/AdminNavbar'
+import Loader from '../../components/Loader'
 
 import {Person,CalendarToday} from '@material-ui/icons'
+import {adminGetAllStudent} from '../../redux/actions/adminAction'
+
 
 const Container = styled.div` 
 width:100%;
@@ -75,15 +79,36 @@ const Button = styled.button`
 
 
 const AdminGetStudents = () => {
+    const admin = useSelector((store) => store.admin);
+    const dispatch = useDispatch();
+    const [department, setDepartment] = useState("C.S.E")
+    const [year, setYear] = useState(1)
+    const [isLoading, setIsLoading] = useState(false)
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (admin.allStudent.length !== 0) {
+            setIsLoading(false)
+        }
+
+    }, [admin.allStudent.length])
+
+    const formHandler = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        dispatch(adminGetAllStudent({department,year}));
+    }
 
     const columns = [
         {field:"id",headerName:"No.",flex:0.3},
         {field:"code",headerName:"Registration Number",flex:0.5},
         {field:"name",headerName:"Name",flex:0.5},
-        {field:"year",headerName:"Email",flex:0.3},
-        {field:"total",headerName:"Section",flex:0.4}
+        {field:"email",headerName:"Email",flex:0.3},
+        {field:"section",headerName:"Section",flex:0.4}
     ]
 
+    /*
     const subjects = [
         {no:1,code:12345,name:"Shifon Shaikh",email:"abc123@gmail.com",year:"A"},
         {no:2,code:12345,name:"Rahul Yadav",email:"abc123@gmail.com",year:"B"},
@@ -91,49 +116,63 @@ const AdminGetStudents = () => {
         {no:4,code:12345,name:"Rakesh Mali",email:"abc123@gmail.com",year:"C"},
         {no:5,code:12345,name:"Raj Aryan",email:"abc123@gmail.com",year:"D"},
     ]
+    */
 
     const rows = [];
-    subjects.forEach((item) => {
+    admin.allStudent.forEach((item,index) => {
         rows.push({
-            id:item.no,
-            code:item.code,
+            id:index + 1,
+            code:item.registrationNumber,
             name:item.name,
-            year:item.email,
-            total:item.year
+            email:item.email,
+            section:item.section
         })
     })
 
 
   return (
     <>
-    <AdminNavbar/>
+   
+            
+<AdminNavbar/>
     <Container>
-        <Form>
+        <Form onSubmit={formHandler}>
             <Heading>Search Students</Heading>
             <FormItem>
                 <Person/>
-                <select>
-                    <option>C.S.E</option>
-                    <option>E.C.E</option>
-                    <option>I.T</option>
-                    <option>Civil</option>
-                    <option>Mechanical</option>
+                <select onChange = {(e) => setDepartment(e.target.value)}>
+                    <option>Department</option>
+                    <option value="C.S.E">C.S.E</option>
+                    <option value="E.C.E">E.C.E</option>
+                    <option value="I.T">I.T</option>
+                    <option value="Civil">Civil</option>
+                    <option value="Mechanical">Mechanical</option>
                 </select>
             </FormItem>
             <FormItem>
                 <CalendarToday/>
-                <select>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
+                <select onChange = {(e) => setYear(e.target.value)}>
+                    <option>Year</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
                 </select>
             </FormItem>
             <Button type="submit">
                 Search
             </Button>
         </Form>
-        <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+       {
+           isLoading?(
+               <Loader/>
+           ):(
+            <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+           )
+       }
+               
+    
+       
     </Container>
     </>
   )

@@ -125,12 +125,6 @@ const StudentSearch = () => {
         <Form>
             <Heading>Search Students</Heading>
             <FormItemContainer>
-                <FormItem>
-                    <Search/>
-                    <input type="text" placeholder="Search by name.."/>
-                </FormItem>
-            </FormItemContainer>
-            <FormItemContainer>
             <FormItem>
                 <Person/>
                 <select>

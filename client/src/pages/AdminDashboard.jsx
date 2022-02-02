@@ -1,5 +1,5 @@
 import React from 'react'
-import AdminNavbar from '../components/FacultyNavbar'
+import AdminNavbar from '../components/AdminNavbar'
 
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'

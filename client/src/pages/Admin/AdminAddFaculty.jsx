@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import StudentNavbar from '../../components/StudentNavbar'
+import AdminNavbar from '../../components/AdminNavbar'
 import styled from 'styled-components'
 
 import {Face,Class,MailOutline,Phone,PhoneIphone,SupervisorAccount,CalendarToday,} from '@material-ui/icons'
+import { adminAddFaculty } from '../../redux/actions/adminAction'
 
 const Container = styled.div`
 width:100vw;
@@ -121,17 +122,24 @@ const AdminAddFaculty = () => {
     const [name,setName] = useState("");
     const [email,setEmail] = useState("");
     const [department,setDepartment] = useState("");
-    const [year,setYear] = useState("");
-    const [section,setSection] = useState("");
-    const [studentMobileNumber, setMobileNumber] = useState('')
-    const [fatherName, setFatherName] = useState('')
-    const [fatherMobileNumber, setFatherMobileNumber] = useState('')
+    const [designation,setDesignation] = useState("");
+    const [facultyMobileNumber, setFacultyMobileNumber] = useState('')
     const [error, setError] = useState({})
-    const [avatarPreview,setAvatarPreview] = useState("./Profile.png")
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const formHandler = (e) => {
+        e.preventDefault();
+    
+        dispatch(adminAddFaculty(name,designation,department,facultyMobileNumber,email));
+        alert.success("Faculty Registration Successful");
+        navigate('/admin/faculties');
+    }
+   
     return(
            <>
-           <StudentNavbar/>
+           <AdminNavbar/>
            <Container>
             <ProfileBox>
                 <ProfileHeader>
@@ -140,38 +148,31 @@ const AdminAddFaculty = () => {
                 <ProfileForm encType='multiform/form-data'>
                   <ProfileName>
                         <Face/>
-                        <ProfileInput type="text" placeholder="Faculty Name" required name="name" value={name}/>
+                        <ProfileInput type="text" onChange = {(e) => setName(e.target.value)} placeholder="Faculty Name" required name="name" value={name}/>
                     </ProfileName>
                     <ProfileEmail>
                     <MailOutline/>
-                        <ProfileInput type="text" placeholder="Email" required name="email" value={email}/>
+                        <ProfileInput type="text" onChange = {(e) => setEmail(e.target.value)} placeholder="Email" required name="email" value={email}/>
                     </ProfileEmail>
                     <ProfilePhone>
                         <Phone/>
-                        <ProfileInput type="text" placeholder="Mobile" required name="studentMobileNumber" value={studentMobileNumber}/>
+                        <ProfileInput type="text" placeholder="Mobile" onChange = {(e) => setFacultyMobileNumber(e.target.value)}  required name="facultyMobileNumber" value={facultyMobileNumber}/>
                     </ProfilePhone>
                     <ProfileName>
                         <Class/>
-                        <select>
-                            <option>C.S.E</option>
-                            <option>I.T</option>
-                            <option>Mechanical</option>
-                            <option>Civil</option>
-                            <option>E.C.E</option>
+                        <select onChange = {(e) => setDepartment(e.target.value)}>
+                            <option>Department</option>
+                            <option value="C.S.E">C.S.E</option>
+                            <option value="I.T">I.T</option>
+                            <option value="Mechanical">Mechanical</option>
+                            <option value="Civil">Civil</option>
+                            <option value="E.C.E">E.C.E</option>
                         </select>
                     </ProfileName>
                     <ProfileName>
                         <SupervisorAccount/>
-                        <ProfileInput type="text" placeholder="Department" required name="fatherName" value={fatherName}/>
+                        <ProfileInput onChange = {(e) => setDesignation(e.target.value)} type="text" placeholder="Designation" required name="designation" value={designation}/>
                     </ProfileName>
-                    <ProfilePhone>
-                        <PhoneIphone/>
-                        <ProfileInput type="text" placeholder="Designation" required name="fatherMobileNumber" value={fatherMobileNumber}/>
-                    </ProfilePhone>
-                    <ProfileImage>
-                    <img src={avatarPreview} alt="Avatar Preview" />
-                    <input type="file" name="avatar" accept="image/*" /> 
-                    </ProfileImage>
                     <ProfileButton type="submit">
                         Add Faculty
                     </ProfileButton>
