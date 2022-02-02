@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import {format} from 'timeago.js'
 
 const MessageSent = styled.div` 
 display: flex;
@@ -47,7 +48,7 @@ export default function({message,own}){
                     <MessageText>{message.message}</MessageText>
                 </MessageTop>
                 <MessageBottom>
-                    {message.createdAt}
+                    {format(message.createdAt)}
                 </MessageBottom>
             </MessageReceived>
         )
@@ -60,7 +61,7 @@ export default function({message,own}){
                     <MessageSentText>{message.message}</MessageSentText>
                 </MessageTop>
                 <MessageBottom>
-                    {message.createdAt}
+                    {format(message.createdAt)}
                 </MessageBottom>
             </MessageSent>
         )
