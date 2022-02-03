@@ -1,11 +1,14 @@
 import React,{useState,useEffect} from 'react'
 import {useSelector,useDispatch} from 'react-redux'
 import {DataGrid} from '@material-ui/data-grid'
+import {Link,useNavigate} from 'react-router-dom';
+
+import axios from 'axios';
 
 import styled from 'styled-components'
-import StudentNavbar from '../../components/AdminNavbar'
+import StudentNavbar from '../../components/StudentNavbar'
 
-import {Person,CalendarToday,Search,Class} from '@material-ui/icons'
+import {Person,CalendarToday,Search,Class,Explore} from '@material-ui/icons'
 
 const Container = styled.div` 
 width:100%;
@@ -90,14 +93,47 @@ const Button = styled.button`
 
 const StudentSearch = () => {
 
+    const student = useSelector((store) => store.student);
+    const navigate = useNavigate();
+    
+
+    const [department, setDepartment] = useState("")
+    const [year, setYear] = useState("")
+    const [section, setSection] = useState("")
+    const [result, setResult] = useState([])
+
+    const fetchStudents = async() => {
+        try{
+            const {data} = await axios.post('http://localhost:3000/api/student/getAllStudents',{
+                department,year,section
+            })
+
+            setResult(data.result);
+
+        }catch(err)
+        {
+            alert("Something went wrong..");
+        }
+    }
+
     const columns = [
-        {field:"id",headerName:"No.",flex:0.3},
-        {field:"code",headerName:"Registration Number",flex:0.5},
+        {field:"num",headerName:"S.R No.",flex:0.1},
+        {field:"id",headerName:"G.R Number",flex:0.5},
         {field:"name",headerName:"Name",flex:0.5},
-        {field:"year",headerName:"Email",flex:0.3},
-        {field:"total",headerName:"Section",flex:0.4}
+        {field:"email",headerName:"Email",flex:0.3},
+        {field:"section",headerName:"Section",flex:0.4},
+        {field:"visit",headerName:"Visit",flex:0.2,type:"number",sortable:"false",renderCell:(params) => {
+            return(
+                <>
+                <Link to={`/profile/${params.getValue(params.id,"id")}`}>
+                 <Explore style={{color:"#0077b6"}}/>
+                </Link>
+                </>
+            )
+        }}
     ]
 
+    /*
     const subjects = [
         {no:1,code:12345,name:"Shifon Shaikh",email:"abc123@gmail.com",year:"A"},
         {no:2,code:12345,name:"Rahul Yadav",email:"abc123@gmail.com",year:"B"},
@@ -105,29 +141,35 @@ const StudentSearch = () => {
         {no:4,code:12345,name:"Rakesh Mali",email:"abc123@gmail.com",year:"C"},
         {no:5,code:12345,name:"Raj Aryan",email:"abc123@gmail.com",year:"D"},
     ]
+    */
 
     const rows = [];
-    subjects.forEach((item) => {
+    result && result.forEach((item,index) => {
         rows.push({
-            id:item.no,
-            code:item.code,
+            num:index + 1,
+            id:item.registrationNumber,
             name:item.name,
-            year:item.email,
-            total:item.year
+            email:item.email,
+            section:item.section
         })
     })
 
+    const formHandler = (e) => {
+        e.preventDefault();
+        fetchStudents();
+    }
 
   return (
     <>
     <StudentNavbar/>
     <Container>
-        <Form>
+        <Form onSubmit={formHandler}>
             <Heading>Search Students</Heading>
             <FormItemContainer>
             <FormItem>
                 <Person/>
-                <select>
+                <select onChange={(e) => setDepartment(e.target.value)}>
+                    <option>Department</option>
                     <option>C.S.E</option>
                     <option>E.C.E</option>
                     <option>I.T</option>
@@ -137,7 +179,8 @@ const StudentSearch = () => {
             </FormItem>
             <FormItem>
                 <CalendarToday/>
-                <select>
+                <select onChange={(e) => setYear(e.target.value)}>
+                    <option>Year</option>
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
@@ -146,7 +189,8 @@ const StudentSearch = () => {
             </FormItem>
             <FormItem>
                 <Class/>
-                <select>
+                <select onChange={(e) => setSection(e.target.value)}>
+                    <option>Section</option>
                     <option>A</option>
                     <option>B</option>
                     <option>C</option>
@@ -158,7 +202,7 @@ const StudentSearch = () => {
                 Search
             </Button>
         </Form>
-        <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+        <DataGrid rows={rows} columns={columns} pageSize={5} autoHeight/>
     </Container>
     </>
   )

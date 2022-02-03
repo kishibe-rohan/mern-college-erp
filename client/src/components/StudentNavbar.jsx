@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector} from 'react-redux'
 import {useAlert} from 'react-alert'
 
-import {Person,Dashboard,Ballot,VpnKey,ExitToApp,Group,ChatBubble,Chat} from '@material-ui/icons'
+import {Person,Dashboard,Ballot,VpnKey,ExitToApp,Group,Chat,Search} from '@material-ui/icons'
 import styled from 'styled-components'
 
 import {studentLogout,newerChats,previousChats} from '../redux/actions/studentAction'
@@ -49,11 +49,27 @@ const MenuItem = styled.div`
 font-size:14px;
 cursor:pointer;
 margin-left:25px;
+position:relative;
 a{
     text-decoration:none;
     color:white;
 };
 `
+const IconBadge = styled.span` 
+width:15px;
+height:15px; 
+background-color:tomato;
+border-radius: 50%;
+  color: white;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+`
+
 
 
 const StudentNavbar = () => {
@@ -109,6 +125,10 @@ const StudentNavbar = () => {
     const attendance = () => {
       navigate('/student/attendance')
     }
+  
+    const searchStudent = () => {
+      navigate('/student/search')
+    }
 
     const chatList = () => {
       navigate('/student/chatList')
@@ -136,19 +156,19 @@ const StudentNavbar = () => {
                        <VpnKey onClick={updatePassword} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
+                       <Search onClick={searchStudent} style={{color:"#0077b6"}}/>
+                     </MenuItem>
+                     <MenuItem>
                        <Group onClick={attendance} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
                        <Ballot onClick={subjectList} style={{color:"#0077b6"}}/>
                      </MenuItem>
                      <MenuItem>
-                       {
-                         student.newerChats.length > 0 ? (
+                       
                           <Chat onClick={chatList} style={{color:"#0077b6"}}/>
-                         ):(
-                          <ChatBubble onClick={chatList} style={{color:"#0077b6"}}/>
-                         )
-                       }
+                          <IconBadge>{student.newerChats.length}</IconBadge>
+                       
                      </MenuItem>
                      <MenuItem>
                        <ExitToApp onClick={logoutHandler} style={{color:"#0077b6"}}/>
