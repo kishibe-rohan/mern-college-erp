@@ -2,7 +2,8 @@ import React from 'react'
 import AdminNavbar from '../components/AdminNavbar'
 
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux';
 
 const Container = styled.div`
 display:flex;
@@ -75,37 +76,49 @@ box-sizing:border-box;
 
 const AdminDashboard = () => {
 
-   
+    const admin = useSelector((state) => state.admin);
+    const navigate = useNavigate();
+    
   return (
+      
     <>
-    <AdminNavbar/>
+    {
+        admin.isAuthenticated?(
+            <>
+ <AdminNavbar/>
     <Container>
       <Header>
           <h1>Admin Profile</h1>
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuqxDTr74EAw5NYdyNkhKPo_el_Z8Iu0-yDg&usqp=CAU" />
-          <h3>John Doe</h3>
-          <h3>21810589</h3>
-          <Link to="/faculty/updateProfile">Update Profile</Link>
+          <img src={admin.admin.avatar} />
+          <h3>{admin.admin.name}</h3>
+          <h3>{admin.admin.registrationNumber}</h3>
+          <Link to="/admin/updateProfile">Update Profile</Link>
       </Header>
       <ProfileInfo>
           <ProfileInfoItem>
               <h4>Email</h4>
-              <p>abc123@gmail.com</p>
+              <p>{admin.admin.email}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Department</h4>
-              <p>C.S.E</p>
+              <p>{admin.admin.department}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Contact Number</h4>
-              <p>+123456789</p>
+              <p>{admin.admin.contactNumber}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Joining Year</h4>
-              <p>2022</p>
+              <p>{admin.admin.joiningYear}</p>
           </ProfileInfoItem>
       </ProfileInfo>
     </Container>
+            </>
+        ):(
+            navigate('/')
+        )
+    }
+   
     </>
   )
 }

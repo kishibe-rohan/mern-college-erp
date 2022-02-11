@@ -113,6 +113,7 @@ exports.getStudentByName = async (req, res, next) => {
 exports.getStudentByRegNum = async (req, res, next) => {
   try {
     const { registrationNumber } = req.body;
+    console.log(req.body);
     const students = await Student.findOne({ registrationNumber });
     if (!students) {
       return res.status(400).json({ message: "No student found" });

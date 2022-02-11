@@ -4,8 +4,11 @@ import {DataGrid} from '@material-ui/data-grid'
 
 import styled from 'styled-components'
 import AdminNavbar from '../../components/AdminNavbar'
+import Loader from '../../components/Loader'
 
+import {adminGetAllSubject} from '../../redux/actions/adminAction'
 import {Person,CalendarToday} from '@material-ui/icons'
+import {useNavigate} from 'react-router-dom'
 
 const Container = styled.div` 
 width:100%;
@@ -77,14 +80,38 @@ const Button = styled.button`
 
 const AdminGetSubjects = () => {
 
+    const dispatch = useDispatch();
+    const admin = useSelector((store) => store.admin);
+
+    const [department, setDepartment] = useState('')
+    const [year, setYear] = useState('')
+    const [error, setError] = useState({})
+    const [isLoading, setIsLoading] = useState(false)
+
+    const navigate = useNavigate();
+
+    const formHandler = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        //console.log(department,year);
+        dispatch(adminGetAllSubject({department,year}));
+    }
+
+    useEffect(() => {
+        if (admin.allSubject.length !== 0) {
+            setIsLoading(false)
+        }
+
+    }, [admin.allSubject])
+
     const columns = [
-        {field:"id",headerName:"Subject No.",flex:0.3},
+        {field:"id",headerName:"Subject No.",flex:0.2},
         {field:"code",headerName:"Subject Code",flex:1},
         {field:"name",headerName:"Subject Name",flex:1},
-        {field:"year",headerName:"Year",flex:0.3},
-        {field:"total",headerName:"Total Lectures",flex:0.4}
+        {field:"total",headerName:"Total Lectures",flex:0.3}
     ]
 
+    /*
     const subjects = [
         {no:1,code:12345,name:"Data Structures",year:2,total:24},
         {no:2,code:12345,name:"Algorithms",year:2,total:28},
@@ -92,28 +119,31 @@ const AdminGetSubjects = () => {
         {no:4,code:12345,name:"Database Management",year:2,total:36},
         {no:5,code:12345,name:"Machine Learning",year:2,total:24},
     ]
+    */
 
     const rows = [];
-    subjects.forEach((item) => {
+    admin.allSubject.forEach((item,index) => {
         rows.push({
-            id:item.no,
-            code:item.code,
-            name:item.name,
-            year:item.year,
-            total:item.total
+            id:index + 1,
+            code:item.subjectCode,
+            name:item.subjectName,
+            total:item.totalLectures
         })
     })
 
 
   return (
     <>
-    <AdminNavbar/>
+    {
+        admin.isAuthenticated?(
+          <>
+ <AdminNavbar/>
     <Container>
-        <Form>
+        <Form onSubmit={formHandler}>
             <Heading>Search Subjects</Heading>
             <FormItem>
                 <Person/>
-                <select>
+                <select onChange= {(e) => setDepartment(e.target.value)}>
                     <option>C.S.E</option>
                     <option>E.C.E</option>
                     <option>I.T</option>
@@ -123,7 +153,7 @@ const AdminGetSubjects = () => {
             </FormItem>
             <FormItem>
                 <CalendarToday/>
-                <select>
+                <select onChange= {(e) => setYear(e.target.value)}>
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
@@ -134,8 +164,20 @@ const AdminGetSubjects = () => {
                 Search
             </Button>
         </Form>
-        <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+        {
+            isLoading?(
+                <Loader/>
+            ):(
+                <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+            )
+        }
+       
     </Container>
+          </>
+        ):(
+            navigate('/')
+        )
+    }
     </>
   )
 }

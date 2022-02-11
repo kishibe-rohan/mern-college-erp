@@ -1,8 +1,11 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import StudentNavbar from '../components/StudentNavbar'
 
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link,useParams,useNavigate } from 'react-router-dom'
+
+import {getStudentByRegNum} from '../redux/actions/studentAction'
 
 const Container = styled.div`
 display:flex;
@@ -75,40 +78,58 @@ border-bottom:0.5px solid #0077b6;
 
 
 const StudentDetails = () => {
+    const student = useSelector((store) => store.student);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const params = useParams();
+
+    const [registrationNumber, setRegistrationNumber] = useState("")
+
+    useEffect(() => {
+        setRegistrationNumber(params.registrationNumber);
+        //console.log(registrationNumber);
+        dispatch(getStudentByRegNum(registrationNumber));
+    },[registrationNumber])
+
   return (
     <>
-    <StudentNavbar/>
+    {
+        !student.isAuthenicated || registrationNumber === student.student.student.registrationNumber ?(
+            navigate('/')
+        ):(
+            <>
+            <StudentNavbar/>
     <Container>
       <Header>
           <h1>Student Profile</h1>
-          <img src="https://bsa.web.unc.edu/wp-content/uploads/sites/14595/2019/10/kushal_student_profile.jpg" />
-          <h3>Ron Doe</h3>
-          <h3>21810489</h3>
-          <Link to="/chat">Message</Link>
+          <img src={student.regNumStudent?.avatar?.url} />
+          <h3>{student.regNumStudent?.name}</h3>
+          <h3>{registrationNumber}</h3>
+          <Link to={`/chat/${student.student.student.registrationNumber}.${registrationNumber}`}>Message</Link>
       </Header>
       <ProfileInfo>
           <ProfileInfoItem>
               <h4>Email</h4>
-              <p>abc123@gmail.com</p>
+              <p>{student.regNumStudent?.email}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Department</h4>
-              <p>C.S.E</p>
+              <p>{student.regNumStudent?.department}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Year</h4>
-              <p>F.Y</p>
+              <p>{student.regNumStudent?.year}</p>
           </ProfileInfoItem>
           <ProfileInfoItem>
               <h4>Section</h4>
-              <p>B</p>
-          </ProfileInfoItem>
-          <ProfileInfoItem>
-              <h4>Year</h4>
-              <p>3</p>
+              <p>{student.regNumStudent?.section}</p>
           </ProfileInfoItem>
       </ProfileInfo>
     </Container>
+            </>
+        )
+    }
+    
     </>
   )
 }

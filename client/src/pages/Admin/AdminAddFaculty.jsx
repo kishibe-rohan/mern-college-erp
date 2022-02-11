@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import {useAlert} from 'react-alert'
 import { useNavigate } from 'react-router-dom'
 
 import AdminNavbar from '../../components/AdminNavbar'
@@ -128,11 +129,13 @@ const AdminAddFaculty = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const alert = useAlert();
+
 
     const formHandler = (e) => {
         e.preventDefault();
     
-        dispatch(adminAddFaculty(name,designation,department,facultyMobileNumber,email));
+        dispatch(adminAddFaculty({name,designation,department,facultyMobileNumber,email}));
         alert.success("Faculty Registration Successful");
         navigate('/admin/faculties');
     }
@@ -145,7 +148,7 @@ const AdminAddFaculty = () => {
                 <ProfileHeader>
                    Add Faculty
                 </ProfileHeader>
-                <ProfileForm encType='multiform/form-data'>
+                <ProfileForm encType='multiform/form-data' onSubmit={formHandler}>
                   <ProfileName>
                         <Face/>
                         <ProfileInput type="text" onChange = {(e) => setName(e.target.value)} placeholder="Faculty Name" required name="name" value={name}/>

@@ -150,7 +150,7 @@ const AdminAddStudent = () => {
         */
         
 
-        dispatch(adminAddStudent(name,year,section,department,studentMobileNumber,email,fatherName,fatherMobileNumber));
+        dispatch(adminAddStudent({name,year,section,department,studentMobileNumber,email,fatherName,fatherMobileNumber}));
         alert.success("Student Registration Successful");
         navigate('/admin/students');
     }

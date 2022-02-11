@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import {useAlert} from 'react-alert';
 
-import StudentNavbar from '../../components/StudentNavbar'
+import AdminNavbar from '../../components/AdminNavbar'
 import styled from 'styled-components'
+import {adminAddSubject} from '../../redux/actions/adminAction'
 
 import {Class,Face,MailOutline,Phone,PhoneIphone,SupervisorAccount,CalendarToday,} from '@material-ui/icons'
 
@@ -115,54 +117,89 @@ width: 100%;
 `
 
 const AdminAddSubject = () => {
-    const [name,setName] = useState("");
-    const [email,setEmail] = useState("");
-    const [department,setDepartment] = useState("");
-    const [year,setYear] = useState("");
-    const [section,setSection] = useState("");
-    const [studentMobileNumber, setMobileNumber] = useState('')
-    const [fatherName, setFatherName] = useState('')
-    const [fatherMobileNumber, setFatherMobileNumber] = useState('')
-    const [error, setError] = useState({})
+ 
+      const admin = useSelector((state) => state.admin);
+      const dispatch = useDispatch();
+      const navigate = useNavigate();
+      const alert = useAlert();
+
+    const [subjectName, setSubjectName] = useState('')
+    const [subjectCode, setSubjectCode] = useState('')
+    const [totalLectures, setTotalLectures] = useState('')
+    const [department, setDepartment] = useState('')
+    const [year, setYear] = useState('')
+
+    const formHandler = (e) => {
+      e.preventDefault();
+      dispatch(adminAddSubject({
+          department,
+          year,
+          subjectCode,
+          subjectName,
+          totalLectures,
+      }));
+
+      alert.success("Subject Registration Successful");
+      navigate('/admin/subjects')
+
+    }
 
     return(
-           <>
-           <StudentNavbar/>
-           <Container>
-            <ProfileBox>
-                <ProfileHeader>
-                    Add Subject
-                </ProfileHeader>
-                <ProfileForm encType='multiform/form-data'>
-                    <ProfileEmail>
-                    <MailOutline/>
-                        <ProfileInput type="text" placeholder="Subject Name" required name="email" value={email}/>
-                    </ProfileEmail>
-                    <ProfilePhone>
-                        <Phone/>
-                        <ProfileInput type="text" placeholder="Subject Code" required name="studentMobileNumber" value={studentMobileNumber}/>
-                    </ProfilePhone>
-                    <ProfileName>
-                        <SupervisorAccount/>
-                        <ProfileInput type="text" placeholder="Total Lectures" required name="fatherName" value={fatherName}/>
-                    </ProfileName>
-                    <ProfileName>
-                        <Class/>
-                        <select>
-                            <option>C.S.E</option>
-                            <option>I.T</option>
-                            <option>Mechanical</option>
-                            <option>Civil</option>
-                            <option>E.C.E</option>
-                        </select>
-                    </ProfileName>
-                    <ProfileButton type="submit">
-                        Add Subject
-                    </ProfileButton>
-                </ProfileForm>
-            </ProfileBox>
-        </Container>
-           </>
+        <>
+        {
+            admin.isAuthenticated?(
+                <>
+                <AdminNavbar/>
+                <Container>
+                 <ProfileBox>
+                     <ProfileHeader>
+                         Add Subject
+                     </ProfileHeader>
+                     <ProfileForm encType='multiform/form-data' onSubmit={formHandler}>
+                         <ProfileEmail>
+                         <MailOutline/>
+                             <ProfileInput type="text" placeholder="Subject Name" required  value={subjectName} onChange={(e) => setSubjectName(e.target.value)}/>
+                         </ProfileEmail>
+                         <ProfilePhone>
+                             <Phone/>
+                             <ProfileInput type="text" placeholder="Subject Code" required  value={subjectCode} onChange={(e) => setSubjectCode(e.target.value)}/>
+                         </ProfilePhone>
+                         <ProfileName>
+                             <SupervisorAccount/>
+                             <ProfileInput type="text" placeholder="Total Lectures" required  value={totalLectures} onChange={(e) => setTotalLectures(e.target.value)}/>
+                         </ProfileName>
+                         <ProfileName>
+                             <Class/>
+                             <select onChange={(e) => setDepartment(e.target.value)}>
+                                 <option>C.S.E</option>
+                                 <option>I.T</option>
+                                 <option>Mechanical</option>
+                                 <option>Civil</option>
+                                 <option>E.C.E</option>
+                             </select>
+                         </ProfileName>
+                         <ProfileName>
+                             <CalendarToday/>
+                             <select onChange={(e) => setYear(e.target.value)}>
+                                 <option>1</option>
+                                 <option>2</option>
+                                 <option>3</option>
+                                 <option>4</option>
+                             </select>
+                         </ProfileName>
+                         <ProfileButton type="submit">
+                             Add Subject
+                         </ProfileButton>
+                     </ProfileForm>
+                 </ProfileBox>
+             </Container>
+                </>
+            ):(
+                navigate('/')
+            )
+        }
+        </>
+          
     )
 }
 

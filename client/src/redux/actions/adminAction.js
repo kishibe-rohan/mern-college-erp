@@ -105,7 +105,6 @@ export const adminAddFaculty = (facultyCredential) => {
         facultyCredential
       );
       dispatch(adminAddFacultyFlag(true));
-      alert.success("Faculty Added Successfully");
     } catch (err) {
       dispatch({
         type: SET_ERRORS,
@@ -123,7 +122,6 @@ export const adminAddStudent = (studentCredential) => {
         studentCredential
       );
       dispatch(adminAddStudentFlag(true));
-      alert("Student Added Successfully");
     } catch (err) {
       dispatch({
         type: SET_ERRORS,
@@ -172,7 +170,7 @@ export const adminAddAdmin = (adminCredentails) => {
 export const adminGetAllFaculty = (department) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.post("/api/admin/getAllFaculty", department);
+      const { data } = await axios.post("/api/admin/getFaculties", department);
       dispatch(adminGetAllFacultyHelper(data.result));
     } catch (err) {
       dispatch({
@@ -197,10 +195,10 @@ export const adminGetAllStudent = (credentials) => {
   };
 };
 
-export const adminGetAllSubject = (department) => {
+export const adminGetAllSubject = (credentials) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.post("/api/admin/getAllSubject", department);
+      const { data } = await axios.post("/api/admin/getSubjects", credentials);
       dispatch(adminGetAllSubjectHelper(data.result));
     } catch (err) {
       dispatch({

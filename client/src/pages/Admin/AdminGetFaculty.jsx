@@ -1,9 +1,12 @@
 import React,{useState,useEffect} from 'react'
 import {useSelector,useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom';
+import {adminGetAllFaculty} from '../../redux/actions/adminAction'
 import {DataGrid} from '@material-ui/data-grid'
 
 import styled from 'styled-components'
 import AdminNavbar from '../../components/AdminNavbar'
+import Loader from '../../components/Loader'
 
 import {ImageSearch} from '@material-ui/icons'
 
@@ -74,15 +77,35 @@ const Button = styled.button`
 
 
 const AdminGetFaculty = () => {
+    const admin = useSelector((store) => store.admin);
+    const dispatch = useDispatch();
+    const [department, setDepartment] = useState("C.S.E");
+    const [isLoading, setIsLoading] = useState(false)
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (admin.allFaculty.length !== 0) {
+            setIsLoading(false)
+        }
+
+    }, [admin.allFaculty.length])
+
+    const formHandler = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        dispatch(adminGetAllFaculty({department}));
+    }
 
     const columns = [
         {field:"id",headerName:"No.",flex:0.3},
         {field:"code",headerName:"Registration Number",flex:0.5},
         {field:"name",headerName:"Name",flex:0.5},
-        {field:"year",headerName:"Email",flex:0.3},
-        {field:"total",headerName:"Joining Year",flex:0.4}
+        {field:"email",headerName:"Email",flex:0.3},
+        {field:"designation",headerName:"Designation",flex:0.4}
     ]
 
+    /*
     const subjects = [
         {no:1,code:12345,name:"Shifon Shaikh",email:"abc123@gmail.com",year:2020},
         {no:2,code:12345,name:"Rahul Yadav",email:"abc123@gmail.com",year:2018},
@@ -90,28 +113,32 @@ const AdminGetFaculty = () => {
         {no:4,code:12345,name:"Rakesh Mali",email:"abc123@gmail.com",year:2006},
         {no:5,code:12345,name:"Raj Aryan",email:"abc123@gmail.com",year:2014},
     ]
+    */
 
     const rows = [];
-    subjects.forEach((item) => {
+    admin.allFaculty.forEach((item,index) => {
         rows.push({
-            id:item.no,
-            code:item.code,
+            id:index + 1,
+            code:item.registrationNumber,
             name:item.name,
-            year:item.email,
-            total:item.year
+            email:item.email,
+            designation:item.designation
         })
     })
 
 
   return (
-    <>
-    <AdminNavbar/>
+      <>
+      {
+          admin.isAuthenticated?(
+              <>
+                  <AdminNavbar/>
     <Container>
-        <Form>
+        <Form onSubmit={formHandler}>
             <Heading>Search Faculty</Heading>
             <FormItem>
                 <ImageSearch/>
-                <select>
+                <select onChange = {(e) => setDepartment(e.target.value)}>
                     <option>C.S.E</option>
                     <option>E.C.E</option>
                     <option>I.T</option>
@@ -123,9 +150,24 @@ const AdminGetFaculty = () => {
                 Search
             </Button>
         </Form>
-        <DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+        {
+            isLoading?(
+                <Loader/>
+            ):(
+<DataGrid rows={rows} columns={columns} pageSize={5} disableSelectionOnClick autoHeight/>
+            )
+        }
+        
     </Container>
-    </>
+              </>
+          ):(
+              navigate('/')
+          )
+      }
+      </>
+    
+
+    
   )
 }
 

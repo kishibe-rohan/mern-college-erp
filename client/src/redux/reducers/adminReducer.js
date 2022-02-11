@@ -55,7 +55,7 @@ const adminReducer = (state = initialState, action) => {
     case "GET_ALL_FACULTY": {
       return {
         ...state,
-        allStudent: action.payload,
+        allFaculty: action.payload,
       };
     }
     case "GET_ALL_STUDENT": {

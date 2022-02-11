@@ -141,10 +141,10 @@ export const chatHelper = (name) => {
 export const getStudentByRegNum = (registrationNumber) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.post(
-        "/api/student/getStudentByReg",
-        registrationNumber
-      );
+      // console.log(registrationNumber);
+      const { data } = await axios.post("/api/student/getStudentByRegNum", {
+        registrationNumber,
+      });
       dispatch(getStudentByRegNumHelper(data.result));
     } catch (err) {
       console.log(err);
