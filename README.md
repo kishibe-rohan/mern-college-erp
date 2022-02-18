@@ -23,7 +23,6 @@ Smart ERP! MERN College ERP project created using **React** for the UI,**Redux**
 
 ![Marks](https://i.ibb.co/KzSPVyT/273879726-625620712071821-8499040278359350061-n.jpg)
 
-
 ![Attendance](https://i.ibb.co/16JRnX1/273855548-1388026998306340-8207234882067626326-n.jpg)
 
 ![Subjects](https://i.ibb.co/w4CWvQH/274159794-500234288114139-2884373080772946661-n.jpg)
@@ -34,7 +33,6 @@ Smart ERP! MERN College ERP project created using **React** for the UI,**Redux**
 <hr/>
 
 ![Explore](https://i.ibb.co/2Z8zb4s/273726690-509759557393140-5215855296451469262-n.jpg)
-
 
 ![Messages](https://i.ibb.co/qFfKpDk/273756503-639492567357960-2126527095969634436-n.jpg)
 
