@@ -167,12 +167,11 @@ export const getOTPStudent = (email) => {
   };
 };
 
-export const submitOTPStudent = (newPassword, history) => {
+export const submitOTPStudent = (credentials) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.post("/api/student/postOTP", newPassword);
-      //alert("Password updated. Please login again");
-      history.push("/");
+      const { data } = await axios.post("/api/student/postOTP", credentials);
+      alert("Password updated. Please login again");
     } catch (err) {
       dispatch({
         type: SET_ERRORS,

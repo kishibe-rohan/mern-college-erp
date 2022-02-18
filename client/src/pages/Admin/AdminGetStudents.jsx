@@ -132,9 +132,10 @@ const AdminGetStudents = () => {
 
   return (
     <>
-   
-            
-<AdminNavbar/>
+    {
+        admin.isAuthenticated?(
+            <>
+            <AdminNavbar/>
     <Container>
         <Form onSubmit={formHandler}>
             <Heading>Search Students</Heading>
@@ -174,6 +175,14 @@ const AdminGetStudents = () => {
     
        
     </Container>
+            </>
+        ):(
+            navigate('/admin/login')
+        )
+    }
+   
+            
+
     </>
   )
 }

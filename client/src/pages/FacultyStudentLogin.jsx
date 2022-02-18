@@ -117,7 +117,7 @@ const FacultyStudentLogin = () => {
         if(facultyAuthenticated)
         {
             navigate('/faculty')
-            alert.success("Faculty Login Successful");
+            
         }
     },[facultyAuthenticated])
 
@@ -125,7 +125,7 @@ const FacultyStudentLogin = () => {
         if(isAuthenticated)
         {
             navigate('/home')
-            alert.success("Student Login Successful");
+           
         }
     },[isAuthenticated])
 

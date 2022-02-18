@@ -92,7 +92,7 @@ const AdminDashboard = () => {
           <img src={admin.admin.avatar} />
           <h3>{admin.admin.name}</h3>
           <h3>{admin.admin.registrationNumber}</h3>
-          <Link to="/admin/updateProfile">Update Profile</Link>
+          <Link to="/admin">Welcome</Link>
       </Header>
       <ProfileInfo>
           <ProfileInfoItem>
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
     </Container>
             </>
         ):(
-            navigate('/')
+            navigate('/admin/login')
         )
     }
    

@@ -171,6 +171,7 @@ const AdminAddSubject = () => {
                          <ProfileName>
                              <Class/>
                              <select onChange={(e) => setDepartment(e.target.value)}>
+                                 <option>Department</option>
                                  <option>C.S.E</option>
                                  <option>I.T</option>
                                  <option>Mechanical</option>
@@ -181,6 +182,7 @@ const AdminAddSubject = () => {
                          <ProfileName>
                              <CalendarToday/>
                              <select onChange={(e) => setYear(e.target.value)}>
+                                 <option>Year</option>
                                  <option>1</option>
                                  <option>2</option>
                                  <option>3</option>
@@ -195,7 +197,7 @@ const AdminAddSubject = () => {
              </Container>
                 </>
             ):(
-                navigate('/')
+                navigate('/admin/login')
             )
         }
         </>

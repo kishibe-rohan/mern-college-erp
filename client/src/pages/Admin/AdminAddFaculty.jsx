@@ -130,6 +130,7 @@ const AdminAddFaculty = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const alert = useAlert();
+    const admin = useSelector((store) => store.admin);
 
 
     const formHandler = (e) => {
@@ -141,48 +142,57 @@ const AdminAddFaculty = () => {
     }
    
     return(
-           <>
-           <AdminNavbar/>
-           <Container>
-            <ProfileBox>
-                <ProfileHeader>
-                   Add Faculty
-                </ProfileHeader>
-                <ProfileForm encType='multiform/form-data' onSubmit={formHandler}>
-                  <ProfileName>
-                        <Face/>
-                        <ProfileInput type="text" onChange = {(e) => setName(e.target.value)} placeholder="Faculty Name" required name="name" value={name}/>
-                    </ProfileName>
-                    <ProfileEmail>
-                    <MailOutline/>
-                        <ProfileInput type="text" onChange = {(e) => setEmail(e.target.value)} placeholder="Email" required name="email" value={email}/>
-                    </ProfileEmail>
-                    <ProfilePhone>
-                        <Phone/>
-                        <ProfileInput type="text" placeholder="Mobile" onChange = {(e) => setFacultyMobileNumber(e.target.value)}  required name="facultyMobileNumber" value={facultyMobileNumber}/>
-                    </ProfilePhone>
-                    <ProfileName>
-                        <Class/>
-                        <select onChange = {(e) => setDepartment(e.target.value)}>
-                            <option>Department</option>
-                            <option value="C.S.E">C.S.E</option>
-                            <option value="I.T">I.T</option>
-                            <option value="Mechanical">Mechanical</option>
-                            <option value="Civil">Civil</option>
-                            <option value="E.C.E">E.C.E</option>
-                        </select>
-                    </ProfileName>
-                    <ProfileName>
-                        <SupervisorAccount/>
-                        <ProfileInput onChange = {(e) => setDesignation(e.target.value)} type="text" placeholder="Designation" required name="designation" value={designation}/>
-                    </ProfileName>
-                    <ProfileButton type="submit">
-                        Add Faculty
-                    </ProfileButton>
-                </ProfileForm>
-            </ProfileBox>
-        </Container>
-           </>
+        <>
+        {
+          admin.isAuthenticated?(
+            <>
+            <AdminNavbar/>
+            <Container>
+             <ProfileBox>
+                 <ProfileHeader>
+                    Add Faculty
+                 </ProfileHeader>
+                 <ProfileForm encType='multiform/form-data' onSubmit={formHandler}>
+                   <ProfileName>
+                         <Face/>
+                         <ProfileInput type="text" onChange = {(e) => setName(e.target.value)} placeholder="Faculty Name" required name="name" value={name}/>
+                     </ProfileName>
+                     <ProfileEmail>
+                     <MailOutline/>
+                         <ProfileInput type="text" onChange = {(e) => setEmail(e.target.value)} placeholder="Email" required name="email" value={email}/>
+                     </ProfileEmail>
+                     <ProfilePhone>
+                         <Phone/>
+                         <ProfileInput type="text" placeholder="Mobile" onChange = {(e) => setFacultyMobileNumber(e.target.value)}  required name="facultyMobileNumber" value={facultyMobileNumber}/>
+                     </ProfilePhone>
+                     <ProfileName>
+                         <Class/>
+                         <select onChange = {(e) => setDepartment(e.target.value)}>
+                             <option>Department</option>
+                             <option value="C.S.E">C.S.E</option>
+                             <option value="I.T">I.T</option>
+                             <option value="Mechanical">Mechanical</option>
+                             <option value="Civil">Civil</option>
+                             <option value="E.C.E">E.C.E</option>
+                         </select>
+                     </ProfileName>
+                     <ProfileName>
+                         <SupervisorAccount/>
+                         <ProfileInput onChange = {(e) => setDesignation(e.target.value)} type="text" placeholder="Designation" required name="designation" value={designation}/>
+                     </ProfileName>
+                     <ProfileButton type="submit">
+                         Add Faculty
+                     </ProfileButton>
+                 </ProfileForm>
+             </ProfileBox>
+         </Container>
+            </>
+          ):(
+              navigate('/admin/login')
+          )
+        }
+        </>
+          
     )
 }
 

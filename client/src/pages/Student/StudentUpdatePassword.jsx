@@ -92,14 +92,6 @@ const StudentUpdatePassword = () => {
     const [confirmNewPassword,setConfirmNewPassword] = useState("");
     const [error, setError] = useState({})
 
-    useEffect(() => {
-        if(store.errorHelper)
-        {
-            errorHandler();
-        }
-    },[store.errorHelper])
-    
-
     const formHandler = async(e) => {
         e.preventDefault();
         dispatch(studentUpdatePassword({oldPassword,newPassword,confirmNewPassword,registrationNumber:student.student.student.registrationNumber}))
@@ -107,11 +99,7 @@ const StudentUpdatePassword = () => {
         dispatch(studentLogout());
     }
 
-    const errorHandler = () => {
-        setError(store.errorHelper);
-        alert.error("Error updating password")
-    }
-
+   
     return(
         <>
         {

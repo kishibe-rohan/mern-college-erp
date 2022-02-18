@@ -101,7 +101,7 @@ const AdminNavbar = () => {
          <Container>
              <Wrapper>
                  <Left>
-                     <Link to="/">
+                     <Link to="/admin">
                          <Logo>ERP</Logo>
                      </Link>
                  </Left>

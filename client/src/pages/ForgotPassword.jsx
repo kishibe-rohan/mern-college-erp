@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,useParams } from 'react-router-dom'
+import {useAlert} from 'react-alert'
+
+import { getOTPStudent, submitOTPStudent } from '../redux/actions/studentAction'
+import { getOTPFaculty, submitOTPFaculty } from '../redux/actions/facultyAction'
 
 import styled from 'styled-components'
 
@@ -114,31 +118,74 @@ width: 100%;
 `
 
 const ForgotPassword = () => {
-    const [name,setName] = useState("");
-    const [email,setEmail] = useState("");
-    const [department,setDepartment] = useState("");
-    const [year,setYear] = useState("");
-    const [section,setSection] = useState("");
-    const [studentMobileNumber, setMobileNumber] = useState('')
-    const [fatherName, setFatherName] = useState('')
-    const [fatherMobileNumber, setFatherMobileNumber] = useState('')
-    const [error, setError] = useState({})
+    const store = useSelector((store) => store)
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const params = useParams();
+    const alert = useAlert();
 
-    const helper = false;
+    const [user,setUser] = useState("");
+    const [email,setEmail] = useState("");
+    const [otp, setOtp] = useState('')
+    const [newPassword, setNewPassword] = useState('')
+    const [confirmNewPassword, setConfirmNewPassword] = useState("")
+    
+   
+    const [error, setErrors] = useState({})
+    const [helper,setHelper] = useState(false);
+
+    useEffect(() => {
+      setUser(params.user);
+    },[user])
+
+
+    useEffect(() => {
+        if (store.student.flag) {
+            setHelper(true)
+        }
+    },[store.student.flag])
+
+    const sendOtpHandler = (e) => {
+        e.preventDefault();
+        if(user === "student")
+        {
+            dispatch(getOTPStudent({email}))
+        }
+
+        else if (user === "faculty") {
+            dispatch(getOTPFaculty({email}))
+         }
+    }
+    
+    const submitOtpHandler = (e) => {
+        e.preventDefault();  
+        if (user === "student") {
+            dispatch(submitOTPStudent({ email, otp, newPassword, confirmNewPassword }));
+            alert.success("Please login with New Password");
+            navigate('/');
+        }
+        else if (user === "faculty")
+        {
+            dispatch(submitOTPFaculty({ email, otp, newPassword, confirmNewPassword }));
+            alert.success("Please login with New Password");
+            navigate('/')
+        }
+
+    }
 
     return(
            <>
            {
                !helper?(
-<Container>
+      <Container>
             <ProfileBox>
                 <ProfileHeader>
                      Forgot Password
                 </ProfileHeader>
-                <ProfileForm encType='multiform/form-data'>
+                <ProfileForm encType='multiform/form-data' onSubmit={sendOtpHandler}>
                     <ProfileEmail>
                     <MailOutline/>
-                        <ProfileInput type="text" placeholder="Email" required name="email" value={email}/>
+                        <ProfileInput type="text" placeholder="Email"  onChange = {(e) => setEmail(e.target.value)} required name="email" value={email}/>
                     </ProfileEmail>
                     <ProfileButton type="submit">
                         Submit
@@ -147,23 +194,23 @@ const ForgotPassword = () => {
             </ProfileBox>
         </Container>
                ):(
-<Container>
+        <Container>
             <ProfileBox>
                 <ProfileHeader>
                      Forgot Password
                 </ProfileHeader>
-                <ProfileForm encType='multiform/form-data'>
+                <ProfileForm encType='multiform/form-data' onSubmit={submitOtpHandler}>
                     <ProfilePhone>
                         <Phone/>
-                        <ProfileInput type="text" placeholder="OTP" required name="studentMobileNumber" value={studentMobileNumber}/>
+                        <ProfileInput type="text" placeholder="OTP" required  value={otp} onChange={(e) => setOtp(e.target.value)}/>
                     </ProfilePhone>
                     <ProfileName>
                         <SupervisorAccount/>
-                        <ProfileInput type="text" placeholder="New Password" required name="fatherName" value={fatherName}/>
+                        <ProfileInput type="password" placeholder="New Password" required  value={newPassword} onChange={(e) => setNewPassword(e.target.value)}/>
                     </ProfileName>
                     <ProfileName>
                         <SupervisorAccount/>
-                        <ProfileInput type="text" placeholder="Confirm New Password" required name="fatherName" value={fatherName}/>
+                        <ProfileInput type="password" placeholder="Confirm New Password" required  value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} />
                     </ProfileName>
                     <ProfileButton type="submit">
                         Submit

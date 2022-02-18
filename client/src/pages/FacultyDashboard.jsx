@@ -79,32 +79,41 @@ const FacultyDashboard = () => {
     const faculty = useSelector((store) => store.faculty);
 
   return (
-    <>
-    <FacultyNavbar/>
-    <Container>
-      <Header>
-          <h1>Faculty Profile</h1>
-          <img src={faculty.faculty.faculty.avatar.url} />
-          <h3>{faculty.faculty.faculty.name}</h3>
-          <h3>{faculty.faculty.faculty.registrationNumber}</h3>
-          <Link to="/faculty/update">Update Profile</Link>
-      </Header>
-      <ProfileInfo>
-          <ProfileInfoItem>
-              <h4>Email</h4>
-              <p>{faculty.faculty.faculty.email}</p>
-          </ProfileInfoItem>
-          <ProfileInfoItem>
-              <h4>Designation</h4>
-              <p>{faculty.faculty.faculty.designation}</p>
-          </ProfileInfoItem>
-          <ProfileInfoItem>
-              <h4>Mobile Number</h4>
-              <p>{faculty.faculty.faculty.facultyMobileNumber}</p>
-          </ProfileInfoItem>
-      </ProfileInfo>
-    </Container>
-    </>
+      <>
+      {
+          faculty.isAuthenticated?(
+            <>
+            <FacultyNavbar/>
+            <Container>
+              <Header>
+                  <h1>Faculty Profile</h1>
+                  <img src={faculty.faculty.faculty.avatar.url} />
+                  <h3>{faculty.faculty.faculty.name}</h3>
+                  <h3>{faculty.faculty.faculty.registrationNumber}</h3>
+                  <Link to="/faculty/update">Update Profile</Link>
+              </Header>
+              <ProfileInfo>
+                  <ProfileInfoItem>
+                      <h4>Email</h4>
+                      <p>{faculty.faculty.faculty.email}</p>
+                  </ProfileInfoItem>
+                  <ProfileInfoItem>
+                      <h4>Designation</h4>
+                      <p>{faculty.faculty.faculty.designation}</p>
+                  </ProfileInfoItem>
+                  <ProfileInfoItem>
+                      <h4>Mobile Number</h4>
+                      <p>{faculty.faculty.faculty.facultyMobileNumber}</p>
+                  </ProfileInfoItem>
+              </ProfileInfo>
+            </Container>
+            </>
+          ):(
+              navigate('/')
+          )
+      }
+      </>
+   
   )
 }
 

@@ -113,8 +113,8 @@ const FacultyUpdateProfile = () => {
 
     const [email,setEmail] = useState(faculty.faculty.faculty.email);
     const [mobile,setMobile] = useState(faculty.faculty.faculty.facultyMobileNumber);
-    const [avatar,setAvatar] = useState("/Profile.png");
-    const [avatarPreview,setAvatarPreview] = useState("/Profile.png");
+    const [avatar,setAvatar] = useState(faculty.faculty.faculty.avatar.url);
+    const [avatarPreview,setAvatarPreview] = useState(faculty.faculty.faculty.avatar.url);
 
     const imageHandler = (e) => {
        const reader = new FileReader();

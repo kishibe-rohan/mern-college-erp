@@ -81,12 +81,11 @@ export const getOTPFaculty = (email) => {
   };
 };
 
-export const submitOTPFaculty = (credentials, history) => {
+export const submitOTPFaculty = (credentials) => {
   return async (dispatch) => {
     try {
       const { data } = await axios.post("/api/faculty/postOTP", credentials);
       alert("Password Updated, kindly login with updated password");
-      history.push("/");
     } catch (err) {
       dispatch({
         type: SET_ERRORS,

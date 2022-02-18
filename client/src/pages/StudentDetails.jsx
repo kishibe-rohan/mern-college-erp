@@ -87,14 +87,14 @@ const StudentDetails = () => {
 
     useEffect(() => {
         setRegistrationNumber(params.registrationNumber);
-        //console.log(registrationNumber);
+        console.log(registrationNumber);
         dispatch(getStudentByRegNum(registrationNumber));
     },[registrationNumber])
 
   return (
     <>
     {
-        !student.isAuthenicated || registrationNumber === student.student.student.registrationNumber ?(
+        !student.isAuthenticated || registrationNumber === student.student.student.registrationNumber ?(
             navigate('/')
         ):(
             <>

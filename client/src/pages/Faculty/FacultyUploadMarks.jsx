@@ -123,16 +123,6 @@ const FacultyUploadMarks = () => {
         }},
     ]
 
-    /*
-    const subjects = [
-        {no:1,code:12345,name:"Shifon Shaikh",email:"abc123@gmail.com",marks:""},
-        {no:2,code:12345,name:"Rahul Yadav",email:"abc123@gmail.com",marks:""},
-        {no:3,code:12345,name:"Disha Patani",email:"abc123@gmail.com",marks:""},
-        {no:4,code:12345,name:"Rakesh Mali",email:"abc123@gmail.com",marks:""},
-        {no:5,code:12345,name:"Raj Aryan",email:"abc123@gmail.com",marks:""},
-    ]
-   */
-
     const store = useSelector((store) => store)
     const faculty = useSelector((store) => store.faculty);
     const navigate = useNavigate();
@@ -191,7 +181,10 @@ const FacultyUploadMarks = () => {
 
   return (
     <>
-    <FacultyNavbar/>
+    {
+        faculty.isAuthenticated?(
+            <>
+ <FacultyNavbar/>
     <Container>
     <Form>
     <Heading>Upload Marks</Heading>
@@ -260,7 +253,7 @@ const FacultyUploadMarks = () => {
                                 <option>{subjectCodeName}</option>
                             )
                         }
-                        </select>
+         </select>
         </FormItem>
         <FormItem>
                   <Class/>
@@ -276,6 +269,12 @@ const FacultyUploadMarks = () => {
      </Form>
         <DataGrid rows={rows} columns={columns} pageSize={5} autoHeight/>
     </Container>
+            </>
+        ):(
+            navigate('/')
+        )
+    }
+   
     </>
   )
 }

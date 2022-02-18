@@ -155,20 +155,12 @@ const FacultyAttendance = () => {
     }
 
 
-    /*
-    const subjects = [
-        {no:1,code:12345,name:"Shifon Shaikh",email:"abc123@gmail.com",},
-        {no:2,code:12345,name:"Rahul Yadav",email:"abc123@gmail.com",},
-        {no:3,code:12345,name:"Disha Patani",email:"abc123@gmail.com",},
-        {no:4,code:12345,name:"Rakesh Mali",email:"abc123@gmail.com",},
-        {no:5,code:12345,name:"Raj Aryan",email:"abc123@gmail.com",},
-    ]
-    */
-
-
   return (
     <>
-    <FacultyNavbar/>
+    {
+        faculty.isAuthenticated?(
+            <>
+            <FacultyNavbar/>
     <Container>
         <Form>
             <Heading>Mark Attendance</Heading>
@@ -250,6 +242,12 @@ const FacultyAttendance = () => {
         
            
     </Container>
+            </>
+        ):(
+            navigate('/')
+        )
+    }
+    
     </>
   )
 }

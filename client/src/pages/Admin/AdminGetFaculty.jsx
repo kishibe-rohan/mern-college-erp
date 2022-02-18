@@ -161,7 +161,7 @@ const AdminGetFaculty = () => {
     </Container>
               </>
           ):(
-              navigate('/')
+              navigate('/admin/login')
           )
       }
       </>

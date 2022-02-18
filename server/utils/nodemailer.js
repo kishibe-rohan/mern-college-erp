@@ -1,10 +1,11 @@
 const nodemailer = require("nodemailer");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const transport = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
-  secure: true,
-  debug: true,
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD,
@@ -15,7 +16,7 @@ const sendEmail = async (email, secretToken, mode) => {
   try {
     if (mode === "OTP") {
       return await transport.sendMail({
-        from: process.env.GMAIL_USERNAME,
+        from: process.env.EMAIL_USERNAME,
         to: email,
         subject: "College ERP OTP",
         html: `

@@ -93,7 +93,7 @@ const AdminGetSubjects = () => {
     const formHandler = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        //console.log(department,year);
+        console.log(department,year);
         dispatch(adminGetAllSubject({department,year}));
     }
 
@@ -144,6 +144,7 @@ const AdminGetSubjects = () => {
             <FormItem>
                 <Person/>
                 <select onChange= {(e) => setDepartment(e.target.value)}>
+                    <option>Department</option>
                     <option>C.S.E</option>
                     <option>E.C.E</option>
                     <option>I.T</option>
@@ -154,6 +155,7 @@ const AdminGetSubjects = () => {
             <FormItem>
                 <CalendarToday/>
                 <select onChange= {(e) => setYear(e.target.value)}>
+                    <option>Year</option>
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
@@ -175,7 +177,7 @@ const AdminGetSubjects = () => {
     </Container>
           </>
         ):(
-            navigate('/')
+            navigate('/admin/login')
         )
     }
     </>

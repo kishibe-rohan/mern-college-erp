@@ -120,6 +120,7 @@ width: 100%;
 
 const AdminAddStudent = () => {
     const dispatch = useDispatch();
+    const admin = useSelector((store) => store.admin);
     const navigate = useNavigate();
     const alert = useAlert();
 
@@ -157,7 +158,10 @@ const AdminAddStudent = () => {
 
     return(
            <>
-           <AdminNavbar/>
+           {
+               admin.isAuthenticated?(
+                   <>
+                   <AdminNavbar/>
            <Container>
             <ProfileBox>
                 <ProfileHeader>
@@ -222,6 +226,12 @@ const AdminAddStudent = () => {
                 </ProfileForm>
             </ProfileBox>
         </Container>
+                   </>
+               ):(
+                   navigate('/admin/login')
+               )
+           }
+           
            </>
     )
 }
