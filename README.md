@@ -64,6 +64,18 @@ Smart ERP! MERN College ERP project created using **React** for the UI,**Redux**
 
 <hr/>
 
+<h3>Login Credentials</h3>
+<hr/>
+
+- Admin
+Reg: ADM202205000 Pass: admin
+
+- Student
+Reg: STU202205001 Pass: rumay123
+
+- Faculty
+Reg: FAC202205003 Pass: koji123
+
 
 <h2><b>To Be Added:</b></h2>
 <hr/>
