@@ -147,7 +147,7 @@ exports.adminLogin = async (req, res, next) => {
 exports.addStudent = async (req, res, next) => {
   try {
     const { errors, isValid } = validateStudentRegisterInput(req.body);
-
+console.log(req.body);
     if (!isValid) {
       return res.status(400).json(errors);
     }

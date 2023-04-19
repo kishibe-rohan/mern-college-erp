@@ -38,7 +38,7 @@ export const facultyLogin = (credentials) => {
       localStorage.setItem("facultyToken", token);
       authToken(token);
 
-      const decoded = jwt_decode(token);
+      const decoded = jwt_decode(token);  
       dispatch(setFaculty(decoded));
     } catch (err) {
       dispatch({
