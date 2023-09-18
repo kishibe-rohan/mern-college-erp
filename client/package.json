@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "npm i",
+    "build": "react",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
