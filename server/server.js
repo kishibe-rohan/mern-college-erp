@@ -6,6 +6,7 @@ const passport = require("passport");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const dotenv = require("dotenv");
+mongoose.set('strictQuery', false);
 dotenv.config();
 
 //Setup Middlewares
