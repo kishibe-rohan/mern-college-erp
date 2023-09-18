@@ -74,7 +74,7 @@ mongoose.connect(process.env.MONGO_URI).then((data) => {
   .catch((err) => {
     console.log("Error in connecting to MongoDB", err.message);
   });
-
+  
 app.use("/", (req, res) => {
   res.status(200).json(_response);
 });

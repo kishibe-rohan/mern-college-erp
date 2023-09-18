@@ -89,7 +89,7 @@ const AdminDashboard = () => {
     <Container>
       <Header>
           <h1>Admin Profile</h1>
-          <img src={admin.admin.avatar} />
+          <img src={'https://www.gravatar.com/avatar/6d7a3cadfc66e1a21cb0a5e8bf8d5d6f?s=400&r=pg&d=mm'} />
           <h3>{admin.admin.name}</h3>
           <h3>{admin.admin.registrationNumber}</h3>
           <Link to="/admin">Welcome</Link>

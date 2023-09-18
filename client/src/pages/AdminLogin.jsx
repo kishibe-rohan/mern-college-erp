@@ -142,7 +142,7 @@ const AdminLogin = () => {
     <Container>
         <Wrapper>
             <Left>
-                <Logo>Smart ERP</Logo>
+                <Logo>ERP</Logo>
                 <Desc>Admin Login</Desc>
             </Left>
             <Right>
