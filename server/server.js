@@ -6,6 +6,7 @@ const passport = require("passport");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const dotenv = require("dotenv");
+mongoose.set('strictQuery', false);
 dotenv.config();
 
 //Setup Middlewares
@@ -67,16 +68,14 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 //Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then((data) => {
+mongoose.connect(process.env.MONGO_URI).then((data) => {
     _response.database = "Healthy";
     console.log(`MongoDB connected with server ${data.connection.host}`);
   })
   .catch((err) => {
     console.log("Error in connecting to MongoDB", err.message);
   });
-
+  
 app.use("/", (req, res) => {
   res.status(200).json(_response);
 });

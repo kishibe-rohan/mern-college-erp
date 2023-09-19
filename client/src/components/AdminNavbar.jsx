@@ -6,6 +6,7 @@ import {PersonAdd,LibraryAdd, HowToReg,Person,ExitToApp,Group,LibraryBooks} from
 import styled from 'styled-components'
 
 import {adminLogout} from '../redux/actions/adminAction'
+import { toast } from 'react-toastify';
 
 const Container = styled.div`
  width:100vw;
@@ -62,7 +63,7 @@ const AdminNavbar = () => {
 
     const logoutHandler = () => {
       dispatch(adminLogout());
-      alert.success("Logged Out");
+      toast.success('Logged Out'); 
       navigate('/admin/login');
     }
 

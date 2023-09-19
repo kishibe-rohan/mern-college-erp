@@ -185,7 +185,7 @@ const FacultyStudentLogin = () => {
     <Container>
         <Wrapper>
             <Left>
-                <Logo>Smart ERP</Logo>
+                <Logo>ERP</Logo>
                 <Desc>Track your academics and stay connected with your peers</Desc>
             </Left>
             <Right>

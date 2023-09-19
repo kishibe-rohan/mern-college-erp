@@ -1,8 +1,8 @@
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const Faculty = require("../models/Faculty");
-const Student = require("../models/student");
-const Admin = require("../models/admin");
+const Student = require("../models/Student");
+const Admin = require("../models/Admin");
 
 const keys = require("./key");
 

@@ -332,7 +332,7 @@ exports.updateProfile = async (req, res, next) => {
     const { email, facultyMobileNumber, registrationNumber } = req.body;
 
     const faculty = await Faculty.findOne({ registrationNumber });
-    //console.log(faculty);
+    console.log(faculty);
 
     const { _id } = faculty;
 

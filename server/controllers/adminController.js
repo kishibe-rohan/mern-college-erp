@@ -17,6 +17,7 @@ const Admin = require("../models/Admin");
 
 //Config
 const keys = require("../config/key");
+const { getMaxListeners } = require("events");
 
 exports.addAdmin = async (req, res, next) => {
   try {
@@ -36,8 +37,12 @@ exports.addAdmin = async (req, res, next) => {
         message: "Email already registered",
       });
     }
+    // let aadmin = {
+    //   email : 'mayank033023@gmail.com'
+    // }
 
-    const avatarUrl = gravatar.url(email, { s: "200", r: "pg", d: "mm" });
+    // <img src={avatarUrl} alt="User Avatar" />
+    console.log(updatedAdmin);
 
     let departmentHelper;
     if (department === "C.S.E") {
@@ -55,7 +60,6 @@ exports.addAdmin = async (req, res, next) => {
     } else {
       departmentHelper = "00";
     }
-
     const admins = await Admin.find({ department });
     let helper;
 
@@ -89,6 +93,7 @@ exports.addAdmin = async (req, res, next) => {
       },
       contactNumber,
     });
+    // console.log(newAdmin)
 
     await newAdmin.save();
     return res.status(200).json({
@@ -100,10 +105,11 @@ exports.addAdmin = async (req, res, next) => {
     return res.status(400).json({ success: false, message: err.message });
   }
 };
-
+//Admin Login
 exports.adminLogin = async (req, res, next) => {
   try {
     const { errors, isValid } = validateAdminLoginInput(req.body);
+    // console.log(req.body);
     if (!isValid) {
       return res.status(400).json(errors);
     }
@@ -143,11 +149,11 @@ exports.adminLogin = async (req, res, next) => {
     console.log("Error in admin login", err.message);
   }
 };
-
+//Add Student
 exports.addStudent = async (req, res, next) => {
   try {
     const { errors, isValid } = validateStudentRegisterInput(req.body);
-
+    console.log(req.body);
     if (!isValid) {
       return res.status(400).json(errors);
     }
@@ -234,7 +240,7 @@ exports.addStudent = async (req, res, next) => {
     console.log("Error in student registration", err.message);
   }
 };
-
+//Add Faculty
 exports.addFaculty = async (req, res, next) => {
   try {
     const { errors, isValid } = validateFacultyRegisterInput(req.body);

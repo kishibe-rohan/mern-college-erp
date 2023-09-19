@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import authToken from "./redux/utils/authToken";
 import store from "./redux/store";
-
+import axios from "axios";
 import { setFacultyUser, facultyLogout } from "./redux/actions/facultyAction";
 import {
   setAdminUser,
